@@ -20,6 +20,7 @@ import {
   NAVIGATION_JS,
   PARENT_CSS,
   RESET_CSS,
+  RUNTIME_GUARD_JS,
 } from './sharedAssets.ts';
 import { COMPANY_THEMES, renderCompanyThemeCss } from './themes.ts';
 import { PARENT_PAGES } from './verifiedData.ts';
@@ -238,6 +239,10 @@ export function buildEcosystemToDirectory(
   );
 
   // Shared modular JS
+  writeTextFile(
+    path.join(outputRoot, 'assets', 'js', 'runtime-guard.js'),
+    RUNTIME_GUARD_JS
+  );
   writeTextFile(
     path.join(outputRoot, 'assets', 'js', 'navigation.js'),
     NAVIGATION_JS

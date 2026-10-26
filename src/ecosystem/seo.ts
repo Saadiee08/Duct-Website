@@ -78,10 +78,14 @@ export function renderSeoHead(input: SeoHeadInput): string {
   const resolvedIconHref = input.useRootRelativeAssets
     ? input.iconHref
     : toRelativeUrl(input.canonicalPath, input.iconHref);
+  const resolvedGuardHref = input.useRootRelativeAssets
+    ? '/assets/js/runtime-guard.js'
+    : toRelativeUrl(input.canonicalPath, '/assets/js/runtime-guard.js');
 
   return `<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="${escapeHtml(resolvedGuardHref)}"></script>
   <title>${escapeHtml(input.title)}</title>
   <meta name="description" content="${escapeHtml(input.description)}" />
   <meta name="robots" content="index, follow" />

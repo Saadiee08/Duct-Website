@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
 import { buildEcosystemToDirectory } from './buildEcosystem';
 import { toRelativeUrl } from './paths';
 import {
@@ -13,6 +14,7 @@ import {
   resolveContainedFilePath,
   validateQuoteSubmission,
 } from './security';
+import { RUNTIME_GUARD_JS } from './sharedAssets';
 import { COMPANY_THEMES } from './themes';
 import {
   LINKED_COMPANIES,
@@ -90,6 +92,39 @@ test('toRelativeUrl computes portable relative paths for Netlify and GitHub Page
     '../#inquiry'
   );
   assert.equal(toRelativeUrl('/', '#contact'), '#contact');
+});
+
+test('runtime guard allows browser extensions to assign window.fetch when host defines getter-only fetch', () => {
+  // Case 1: Getter-only fetch on Window.prototype (matches "Cannot set property fetch of #<Window> which has only a getter")
+  function MockWindow() {}
+  const baseFetch = () => 'base-fetch';
+  Object.defineProperty(MockWindow.prototype, 'fetch', {
+    get() {
+      return baseFetch;
+    },
+    configurable: false,
+    enumerable: true,
+  });
+
+  const winInstance = new (MockWindow as unknown as { new (): Record<string, unknown> })();
+  winInstance.addEventListener = () => {};
+
+  // Confirm raw assignment throws before guard runs
+  assert.throws(() => {
+    (winInstance as { fetch: unknown }).fetch = () => 'ext-fetch';
+  }, TypeError);
+
+  vm.runInNewContext(RUNTIME_GUARD_JS, {
+    window: winInstance,
+    Window: MockWindow,
+    Object,
+  });
+
+  const extFetch = () => 'extension-wrapped-fetch';
+  assert.doesNotThrow(() => {
+    (winInstance as { fetch: unknown }).fetch = extFetch;
+  });
+  assert.equal((winInstance as { fetch: unknown }).fetch, extFetch);
 });
 
 test('clean route resolver enforces strict 2-page rule, redirects, and blocks traversal/open-redirect', () => {
