@@ -5,6 +5,7 @@ import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { buildEcosystemToDirectory } from './buildEcosystem';
+import { toRelativeUrl } from './paths';
 import {
   buildSecurityHeaders,
   createRateLimiter,
@@ -60,6 +61,35 @@ test('ecosystem URL inventory contains 7 parent pages + 30 linked pages = 37 cle
     assert.ok(url.endsWith('/'), `URL ${url} must end with /`);
     assert.ok(!url.includes('index.html'), `Clean URL ${url} must not expose index.html`);
   }
+});
+
+test('toRelativeUrl computes portable relative paths for Netlify and GitHub Pages subpaths', () => {
+  assert.equal(
+    toRelativeUrl('/', '/assets/images/gta/img1.jpeg'),
+    './assets/images/gta/img1.jpeg'
+  );
+  assert.equal(
+    toRelativeUrl('/services/', '/assets/images/gta/img1.jpeg'),
+    '../assets/images/gta/img1.jpeg'
+  );
+  assert.equal(
+    toRelativeUrl('/fresh-air-pros/about/', '/assets/images/editorial/luxury-residence-air.jpg'),
+    '../../assets/images/editorial/luxury-residence-air.jpg'
+  );
+  assert.equal(
+    toRelativeUrl('/fresh-air-pros/', '/fresh-air-pros/assets/css/theme.css'),
+    './assets/css/theme.css'
+  );
+  assert.equal(
+    toRelativeUrl('/fresh-air-pros/about/', '/fresh-air-pros/assets/css/theme.css'),
+    '../assets/css/theme.css'
+  );
+  assert.equal(toRelativeUrl('/fresh-air-pros/about/', '/'), '../../');
+  assert.equal(
+    toRelativeUrl('/fresh-air-pros/about/', '/fresh-air-pros/#inquiry'),
+    '../#inquiry'
+  );
+  assert.equal(toRelativeUrl('/', '#contact'), '#contact');
 });
 
 test('clean route resolver enforces strict 2-page rule, redirects, and blocks traversal/open-redirect', () => {
@@ -220,7 +250,47 @@ test('physical HTML builder writes 37 unique HTML documents, 15 theme CSS files,
     const titles = new Set<string>();
     const canonicals = new Set<string>();
 
-    // Check all 7 parent HTML documents exist and contain zero inline style attributes
+    function assertAllLocalAssetsExist(htmlFile: string, html: string): void {
+      const dir = path.dirname(htmlFile);
+      const imgSrcs = [
+        ...html.matchAll(/<img [^>]*src="([^"]+)"/g),
+        ...html.matchAll(/data-lightbox-src="([^"]+)"/g),
+      ].map((m) => m[1]!);
+
+      assert.ok(imgSrcs.length > 0, `Expected at least one image in ${htmlFile}`);
+      for (const src of imgSrcs) {
+        assert.ok(
+          src.startsWith('./') || src.startsWith('../'),
+          `Image src "${src}" in ${htmlFile} must be relative for GitHub Pages subpath compatibility`
+        );
+        const resolved = path.resolve(dir, src);
+        assert.ok(
+          fs.existsSync(resolved) && fs.statSync(resolved).size > 0,
+          `Missing or empty image asset "${src}" -> ${resolved} referenced from ${htmlFile}`
+        );
+      }
+
+      const localLinksAndScripts = [
+        ...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g),
+        ...html.matchAll(/<script src="([^"]+)"/g),
+      ]
+        .map((m) => m[1]!)
+        .filter((u) => !u.startsWith('http://') && !u.startsWith('https://'));
+
+      for (const ref of localLinksAndScripts) {
+        assert.ok(
+          ref.startsWith('./') || ref.startsWith('../'),
+          `Asset ref "${ref}" in ${htmlFile} must be relative`
+        );
+        const resolved = path.resolve(dir, ref);
+        assert.ok(
+          fs.existsSync(resolved) && fs.statSync(resolved).size > 0,
+          `Missing or empty stylesheet/script "${ref}" -> ${resolved} referenced from ${htmlFile}`
+        );
+      }
+    }
+
+    // Check all 7 parent HTML documents exist, contain zero inline style attributes, and resolve all images
     for (const parentPage of PARENT_PAGES) {
       const filePath =
         parentPage.slug === ''
@@ -232,6 +302,7 @@ test('physical HTML builder writes 37 unique HTML documents, 15 theme CSS files,
         !html.includes('style="'),
         `Inline style attribute found in parent HTML: ${filePath}`
       );
+      assertAllLocalAssetsExist(filePath, html);
       const titleMatch = html.match(/<title>([^<]+)<\/title>/);
       const canonMatch = html.match(/<link rel="canonical" href="([^"]+)"/);
       assert.ok(titleMatch && titleMatch[1]);
@@ -245,7 +316,7 @@ test('physical HTML builder writes 37 unique HTML documents, 15 theme CSS files,
     const notFoundHtml = fs.readFileSync(path.join(tempOut, '404.html'), 'utf8');
     assert.ok(!notFoundHtml.includes('style="'), 'Inline style found in 404.html');
 
-    // Check all 30 linked-company HTML documents + 15 theme stylesheets exist
+    // Check all 30 linked-company HTML documents + 15 theme stylesheets exist and resolve all images
     const themeCssContents = new Set<string>();
     for (const company of LINKED_COMPANIES) {
       const homeFile = path.join(tempOut, company.slug, 'index.html');
@@ -264,14 +335,17 @@ test('physical HTML builder writes 37 unique HTML documents, 15 theme CSS files,
 
       themeCssContents.add(fs.readFileSync(themeCssFile, 'utf8'));
 
-      for (const file of [homeFile, aboutFile]) {
+      for (const [idx, file] of [homeFile, aboutFile].entries()) {
         const html = fs.readFileSync(file, 'utf8');
         assert.ok(
           !html.includes('style="'),
           `Inline style attribute found in linked HTML: ${file}`
         );
         assert.ok(html.includes(company.exactName));
-        assert.ok(html.includes(`/${company.slug}/assets/css/theme.css`));
+        assert.ok(
+          html.includes(idx === 0 ? './assets/css/theme.css' : '../assets/css/theme.css')
+        );
+        assertAllLocalAssetsExist(file, html);
 
         // Primary nav must strictly contain only Home and About Us links
         const navMatch = html.match(
@@ -299,6 +373,7 @@ test('physical HTML builder writes 37 unique HTML documents, 15 theme CSS files,
     const sitemap = fs.readFileSync(path.join(tempOut, 'sitemap.xml'), 'utf8');
     const locCount = [...sitemap.matchAll(/<loc>/g)].length;
     assert.equal(locCount, 37);
+    assert.ok(fs.existsSync(path.join(tempOut, '.nojekyll')));
   } finally {
     fs.rmSync(tempOut, { recursive: true, force: true });
   }

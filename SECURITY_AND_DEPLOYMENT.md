@@ -66,10 +66,14 @@ npm start
 3. Run `npm run build` followed by `npm start` (`node server.ts`).
 4. Express serves all 37 clean trailing-slash URLs directly from `dist/`, enforces HTTP security headers (including HSTS in production), and activates server-side `/api/quote` validation and rate limiting.
 
-### Option B: Static CDN Hosting (e.g., Current Netlify Account on `gtaductmasters.ca`)
-1. Run `npm run build`.
-2. Publish the generated `dist/` (or `gtaductmasters/`) directory to Netlify **only after owner sign-off**.
-3. The included `_headers` and `_redirects` files automatically configure clean URLs (301-redirecting `/index.html` to `/`), serve `404.html` on unknown routes, and attach `Content-Security-Policy`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and `Strict-Transport-Security`. Quote forms gracefully hand off validated requests to pre-encoded `mailto:` and WhatsApp channels when `/api/quote` is absent on pure static hosts.
+### Option B: Netlify Deployment (`netlify.toml` Included)
+1. Connect the repository to Netlify (or drag-and-drop `dist/` or `gtaductmasters/`).
+2. `netlify.toml` automatically runs `npm run build` and publishes `dist/` with all 37 physical HTML documents and all 14 verified image assets.
+3. `_headers` and `_redirects` configure clean URLs, `404.html`, and security headers (`img-src 'self' data: blob: https:` for Netlify CDN compatibility).
+
+### Option C: GitHub Pages Deployment (`.github/workflows/deploy-pages.yml` Included)
+1. In your GitHub repository, open **Settings → Pages → Build and deployment** and set **Source** to **GitHub Actions** (the included `.github/workflows/deploy-pages.yml` builds and publishes `dist/` automatically on push to `main`).
+2. Alternatively, if deploying directly from a branch, all 37 HTML pages use depth-aware relative asset URLs (`./assets/...`, `../assets/...`, `../../assets/...`) and `.nojekyll`, so images, CSS, and scripts load accurately even under repository subpaths (`https://<username>.github.io/<repo-name>/` or `/<repo-name>/gtaductmasters/`).
 
 ---
 

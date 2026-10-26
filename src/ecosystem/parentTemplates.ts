@@ -1,3 +1,4 @@
+import { toRelativeUrl } from './paths.ts';
 import { escapeHtml } from './security.ts';
 import { renderSeoHead } from './seo.ts';
 import {
@@ -111,21 +112,27 @@ function renderParentSocialRail(): string {
   </aside>`;
 }
 
-function renderParentHeader(activeUrlPath: string): string {
+function renderParentHeader(
+  activeUrlPath: string,
+  useRootPaths: boolean = false
+): string {
+  const rel = (target: string) =>
+    useRootPaths ? target : toRelativeUrl(activeUrlPath, target);
+
   const desktopLinks = PARENT_PAGES.map((page) => {
     const currentAttr = page.urlPath === activeUrlPath ? ' aria-current="page"' : '';
-    return `        <a href="${escapeHtml(page.urlPath)}" data-page-transition${currentAttr}>${escapeHtml(page.navLabel)}</a>`;
+    return `        <a href="${escapeHtml(rel(page.urlPath))}" data-page-transition${currentAttr}>${escapeHtml(page.navLabel)}</a>`;
   }).join('\n');
 
   const mobileLinks = PARENT_PAGES.map((page) => {
     const currentAttr = page.urlPath === activeUrlPath ? ' aria-current="page"' : '';
-    return `        <a href="${escapeHtml(page.urlPath)}" data-page-transition${currentAttr}>${escapeHtml(page.navLabel)}</a>`;
+    return `        <a href="${escapeHtml(rel(page.urlPath))}" data-page-transition${currentAttr}>${escapeHtml(page.navLabel)}</a>`;
   }).join('\n');
 
   return `<header class="parent-header">
     <div class="container parent-header-inner">
-      <a href="/" class="parent-brand-link" data-page-transition>
-        <img src="/assets/images/gta/Logo.jpg" alt="GTA Duct Masters Logo" width="42" height="42" referrerpolicy="no-referrer" class="parent-brand-logo" />
+      <a href="${escapeHtml(rel('/'))}" class="parent-brand-link" data-page-transition>
+        <img src="${escapeHtml(rel('/assets/images/gta/Logo.jpg'))}" alt="GTA Duct Masters Logo" width="42" height="42" class="parent-brand-logo" />
         <span class="parent-brand-name">GTA Duct Masters</span>
       </a>
 
@@ -154,27 +161,33 @@ ${mobileLinks}
   </header>`;
 }
 
-function renderParentFooter(): string {
+function renderParentFooter(
+  currentUrlPath: string,
+  useRootPaths: boolean = false
+): string {
+  const rel = (target: string) =>
+    useRootPaths ? target : toRelativeUrl(currentUrlPath, target);
+
   const quickLinks = PARENT_PAGES.map(
-    (p) => `            <li><a href="${escapeHtml(p.urlPath)}" data-page-transition>${escapeHtml(p.navLabel)}</a></li>`
+    (p) => `            <li><a href="${escapeHtml(rel(p.urlPath))}" data-page-transition>${escapeHtml(p.navLabel)}</a></li>`
   ).join('\n');
 
   const serviceLinks = VERIFIED_SERVICES.map(
     (s) =>
-      `            <li><a href="/services/#${escapeHtml(s.id)}" data-page-transition>${escapeHtml(s.title)}</a></li>`
+      `            <li><a href="${escapeHtml(rel(`/services/#${s.id}`))}" data-page-transition>${escapeHtml(s.title)}</a></li>`
   ).join('\n');
 
   const networkLinks = LINKED_COMPANIES.map(
     (c) =>
-      `          <a href="${escapeHtml(c.homeUrl)}">${escapeHtml(c.exactName)}</a>`
+      `          <a href="${escapeHtml(rel(c.homeUrl))}">${escapeHtml(c.exactName)}</a>`
   ).join('\n');
 
   return `<footer class="parent-footer">
     <div class="container">
       <div class="parent-footer-grid">
         <div>
-          <a href="/" class="parent-brand-link mb-md">
-            <img src="/assets/images/gta/Logo.jpg" alt="GTA Duct Masters Logo" width="42" height="42" referrerpolicy="no-referrer" class="parent-brand-logo" />
+          <a href="${escapeHtml(rel('/'))}" class="parent-brand-link mb-md">
+            <img src="${escapeHtml(rel('/assets/images/gta/Logo.jpg'))}" alt="GTA Duct Masters Logo" width="42" height="42" class="parent-brand-logo" />
             <span class="parent-brand-name parent-brand-name--light">GTA Duct Masters</span>
           </a>
           <p class="parent-footer-tagline">Cleaner Air. Healthier Living. Certified Experts.</p>
@@ -241,15 +254,19 @@ ${items}
   </section>`;
 }
 
-function renderServicesSection(isDedicatedPage: boolean): string {
+function renderServicesSection(
+  currentUrlPath: string,
+  isDedicatedPage: boolean
+): string {
+  const rel = (target: string) => toRelativeUrl(currentUrlPath, target);
   const cards = VERIFIED_SERVICES.map((svc, idx) => {
     const bullets = svc.features
       .map((f) => `              <li>${escapeHtml(f)}</li>`)
       .join('\n');
-    const quoteHref = isDedicatedPage ? '/contact/' : '#contact';
+    const quoteHref = isDedicatedPage ? rel('/contact/') : '#contact';
     return `        <article class="parent-service-card" id="${escapeHtml(svc.id)}" data-reveal-item>
           <div class="media-fallback-frame parent-service-card-media">
-            <img src="${escapeHtml(svc.imageSrc)}" alt="${escapeHtml(svc.imageAlt)}" width="800" height="450" loading="lazy" referrerpolicy="no-referrer" />
+            <img src="${escapeHtml(rel(svc.imageSrc))}" alt="${escapeHtml(svc.imageAlt)}" width="800" height="450" loading="lazy" />
           </div>
           <div class="parent-service-card-body">
             <div class="meta-line meta-line-brass">
@@ -263,7 +280,7 @@ function renderServicesSection(isDedicatedPage: boolean): string {
 ${bullets}
             </ul>
             <div class="parent-service-footer">
-              <a href="${quoteHref}" data-select-service="${escapeHtml(svc.formOptionValue)}" class="text-arrow-link">
+              <a href="${escapeHtml(quoteHref)}" data-select-service="${escapeHtml(svc.formOptionValue)}" class="text-arrow-link">
                 Request ${escapeHtml(svc.title)} Quote &rarr;
               </a>
             </div>
@@ -282,7 +299,7 @@ ${bullets}
         ${
           isDedicatedPage
             ? ''
-            : `<a href="/services/" data-page-transition class="btn-action btn-parent-outline">Explore Full Service Scope</a>`
+            : `<a href="${escapeHtml(rel('/services/'))}" data-page-transition class="btn-action btn-parent-outline">Explore Full Service Scope</a>`
         }
       </div>
       <div class="parent-services-grid">
@@ -292,7 +309,11 @@ ${cards}
   </section>`;
 }
 
-function renderAboutSection(isDedicatedPage: boolean): string {
+function renderAboutSection(
+  currentUrlPath: string,
+  isDedicatedPage: boolean
+): string {
+  const rel = (target: string) => toRelativeUrl(currentUrlPath, target);
   const certs = PARENT_CERTIFICATIONS.join(
     ' <span class="meta-sep" aria-hidden="true">·</span> '
   );
@@ -300,7 +321,7 @@ function renderAboutSection(isDedicatedPage: boolean): string {
     <div class="container parent-about-split" data-reveal-group>
       <div data-reveal-item>
         <div class="media-fallback-frame parent-about-photo">
-          <img src="/assets/images/gta/img2.jpeg" alt="GTA Duct Masters certified HVAC technician at work" width="800" height="600" loading="lazy" referrerpolicy="no-referrer" />
+          <img src="${escapeHtml(rel('/assets/images/gta/img2.jpeg'))}" alt="GTA Duct Masters certified HVAC technician at work" width="800" height="600" loading="lazy" />
         </div>
         <div class="meta-line meta-line-muted-bold mt-md">
           <span>${certs}</span>
@@ -335,11 +356,11 @@ function renderAboutSection(isDedicatedPage: boolean): string {
         </div>
 
         <div class="flex-wrap-actions">
-          <a href="${isDedicatedPage ? '/contact/' : '#contact'}" class="btn-action btn-parent-primary">Get Your Free Estimate</a>
+          <a href="${escapeHtml(isDedicatedPage ? rel('/contact/') : '#contact')}" class="btn-action btn-parent-primary">Get Your Free Estimate</a>
           ${
             isDedicatedPage
               ? ''
-              : `<a href="/about/" data-page-transition class="btn-action btn-parent-outline">Read Full Company Profile</a>`
+              : `<a href="${escapeHtml(rel('/about/'))}" data-page-transition class="btn-action btn-parent-outline">Read Full Company Profile</a>`
           }
         </div>
       </div>
@@ -347,7 +368,11 @@ function renderAboutSection(isDedicatedPage: boolean): string {
   </section>`;
 }
 
-function renderWhyUsSection(isDedicatedPage: boolean): string {
+function renderWhyUsSection(
+  currentUrlPath: string,
+  isDedicatedPage: boolean
+): string {
+  const rel = (target: string) => toRelativeUrl(currentUrlPath, target);
   const cards = PARENT_ADVANTAGES.map(
     (adv) => `        <article class="parent-why-card" data-reveal-item>
           <span class="parent-why-num tabular-nums">${escapeHtml(adv.number)}.</span>
@@ -367,7 +392,7 @@ function renderWhyUsSection(isDedicatedPage: boolean): string {
         ${
           isDedicatedPage
             ? ''
-            : `<a href="/why-us/" data-page-transition class="btn-action btn-parent-outline">View All Guarantees</a>`
+            : `<a href="${escapeHtml(rel('/why-us/'))}" data-page-transition class="btn-action btn-parent-outline">View All Guarantees</a>`
         }
       </div>
       <div class="parent-why-grid">
@@ -377,16 +402,20 @@ ${cards}
   </section>`;
 }
 
-function renderGallerySection(isDedicatedPage: boolean): string {
+function renderGallerySection(
+  currentUrlPath: string,
+  isDedicatedPage: boolean
+): string {
+  const rel = (target: string) => toRelativeUrl(currentUrlPath, target);
   const pairs = PARENT_GALLERY_PAIRS.map(
     (pair) => `        <article class="ba-card" data-reveal-item>
           <div class="ba-pair">
-            <button type="button" class="ba-frame" data-lightbox-src="${escapeHtml(pair.beforeSrc)}" data-lightbox-alt="${escapeHtml(pair.beforeAlt)}" aria-label="Enlarge before photo: ${escapeHtml(pair.caption)}">
-              <img src="${escapeHtml(pair.beforeSrc)}" alt="${escapeHtml(pair.beforeAlt)}" width="600" height="450" loading="lazy" referrerpolicy="no-referrer" />
+            <button type="button" class="ba-frame" data-lightbox-src="${escapeHtml(rel(pair.beforeSrc))}" data-lightbox-alt="${escapeHtml(pair.beforeAlt)}" aria-label="Enlarge before photo: ${escapeHtml(pair.caption)}">
+              <img src="${escapeHtml(rel(pair.beforeSrc))}" alt="${escapeHtml(pair.beforeAlt)}" width="600" height="450" loading="lazy" />
               <span class="ba-caption-tag">Before</span>
             </button>
-            <button type="button" class="ba-frame" data-lightbox-src="${escapeHtml(pair.afterSrc)}" data-lightbox-alt="${escapeHtml(pair.afterAlt)}" aria-label="Enlarge after photo: ${escapeHtml(pair.caption)}">
-              <img src="${escapeHtml(pair.afterSrc)}" alt="${escapeHtml(pair.afterAlt)}" width="600" height="450" loading="lazy" referrerpolicy="no-referrer" />
+            <button type="button" class="ba-frame" data-lightbox-src="${escapeHtml(rel(pair.afterSrc))}" data-lightbox-alt="${escapeHtml(pair.afterAlt)}" aria-label="Enlarge after photo: ${escapeHtml(pair.caption)}">
+              <img src="${escapeHtml(rel(pair.afterSrc))}" alt="${escapeHtml(pair.afterAlt)}" width="600" height="450" loading="lazy" />
               <span class="ba-caption-tag">After</span>
             </button>
           </div>
@@ -395,7 +424,7 @@ function renderGallerySection(isDedicatedPage: boolean): string {
               <span class="muted-note-xs">${escapeHtml(pair.category)} Inspection</span>
               <h3>${escapeHtml(pair.caption)}</h3>
             </div>
-            <a href="${isDedicatedPage ? '/contact/' : '#contact'}" class="text-arrow-link">Book &rarr;</a>
+            <a href="${escapeHtml(isDedicatedPage ? rel('/contact/') : '#contact')}" class="text-arrow-link">Book &rarr;</a>
           </div>
         </article>`
   ).join('\n');
@@ -411,7 +440,7 @@ function renderGallerySection(isDedicatedPage: boolean): string {
         ${
           isDedicatedPage
             ? ''
-            : `<a href="/gallery/" data-page-transition class="btn-action btn-parent-outline">Open Full Gallery</a>`
+            : `<a href="${escapeHtml(rel('/gallery/'))}" data-page-transition class="btn-action btn-parent-outline">Open Full Gallery</a>`
         }
       </div>
       <div class="ba-grid">
@@ -424,12 +453,16 @@ ${pairs}
         <p id="gallery-lightbox-caption" class="gallery-dialog-caption"></p>
         <button type="button" id="gallery-lightbox-close" class="btn-action btn-parent-light dialog-close-compact">Close</button>
       </div>
-      <img id="gallery-lightbox-img" src="/assets/images/gta/img4.jpeg" alt="Inspection detail" width="900" height="675" referrerpolicy="no-referrer" />
+      <img id="gallery-lightbox-img" src="${escapeHtml(rel('/assets/images/gta/img4.jpeg'))}" alt="Inspection detail" width="900" height="675" />
     </dialog>
   </section>`;
 }
 
-function renderReviewsSection(isDedicatedPage: boolean): string {
+function renderReviewsSection(
+  currentUrlPath: string,
+  isDedicatedPage: boolean
+): string {
+  const rel = (target: string) => toRelativeUrl(currentUrlPath, target);
   const cards = PARENT_REVIEWS.map(
     (rev) => `        <article class="review-card" data-review-category="${escapeHtml(rev.serviceTag)}" data-reveal-item aria-label="Verified review by ${escapeHtml(rev.author)}">
           <div class="review-top-row">
@@ -458,7 +491,7 @@ function renderReviewsSection(isDedicatedPage: boolean): string {
         ${
           isDedicatedPage
             ? `<p data-review-count class="muted-note-sm font-semibold">Showing 6 verified reviews</p>`
-            : `<a href="/reviews/" data-page-transition class="btn-action btn-parent-outline">Read All Reviews</a>`
+            : `<a href="${escapeHtml(rel('/reviews/'))}" data-page-transition class="btn-action btn-parent-outline">Read All Reviews</a>`
         }
       </div>
 
@@ -477,10 +510,11 @@ ${cards}
   </section>`;
 }
 
-function renderPartnerDirectorySection(): string {
+function renderPartnerDirectorySection(currentUrlPath: string): string {
+  const rel = (target: string) => toRelativeUrl(currentUrlPath, target);
   const items = LINKED_COMPANIES.map((company) => {
     const num = String(company.index).padStart(2, '0');
-    return `        <a href="${escapeHtml(company.homeUrl)}" class="network-directory-item" data-reveal-item>
+    return `        <a href="${escapeHtml(rel(company.homeUrl))}" class="network-directory-item" data-reveal-item>
           <div>
             <span class="network-directory-index tabular-nums">Partner Brand ${num}</span>
             <span class="network-directory-name">${escapeHtml(company.exactName)}</span>
@@ -554,6 +588,7 @@ function renderContactSection(): string {
 }
 
 function wrapParentDocument(meta: ParentPageMeta, mainContent: string): string {
+  const rel = (target: string) => toRelativeUrl(meta.urlPath, target);
   const head = renderSeoHead({
     title: meta.title,
     description: meta.metaDescription,
@@ -577,19 +612,22 @@ ${head}
   <main id="main-content">
     ${mainContent}
   </main>
-  ${renderParentFooter()}
-  <script src="/assets/js/vendor/gsap.min.js" defer></script>
-  <script src="/assets/js/vendor/ScrollTrigger.min.js" defer></script>
-  <script src="/assets/js/navigation.js" defer></script>
-  <script src="/assets/js/motion.js" defer></script>
-  <script src="/assets/js/forms.js" defer></script>
-  <script src="/assets/js/gallery-reviews.js" defer></script>
+  ${renderParentFooter(meta.urlPath)}
+  <script src="${escapeHtml(rel('/assets/js/vendor/gsap.min.js'))}" defer></script>
+  <script src="${escapeHtml(rel('/assets/js/vendor/ScrollTrigger.min.js'))}" defer></script>
+  <script src="${escapeHtml(rel('/assets/js/navigation.js'))}" defer></script>
+  <script src="${escapeHtml(rel('/assets/js/motion.js'))}" defer></script>
+  <script src="${escapeHtml(rel('/assets/js/forms.js'))}" defer></script>
+  <script src="${escapeHtml(rel('/assets/js/gallery-reviews.js'))}" defer></script>
 </body>
 </html>
 `;
 }
 
 export function renderParentPage(meta: ParentPageMeta): string {
+  const cur = meta.urlPath;
+  const rel = (target: string) => toRelativeUrl(cur, target);
+
   if (meta.slug === '') {
     const heroHtml = `<section class="parent-hero" id="home" aria-labelledby="hero-heading">
       <div class="container parent-hero-grid">
@@ -614,7 +652,7 @@ export function renderParentPage(meta: ParentPageMeta): string {
             <a href="${escapeHtml(VERIFIED_CONTACT.phoneHref)}" class="btn-action btn-parent-light tabular-nums">
               Call Now — ${escapeHtml(VERIFIED_CONTACT.phoneDisplay)}
             </a>
-            <a href="/contact/" data-page-transition class="btn-action btn-hero-ghost-white">
+            <a href="${escapeHtml(rel('/contact/'))}" data-page-transition class="btn-action btn-hero-ghost-white">
               Get Free Estimate
             </a>
             <a href="${escapeHtml(VERIFIED_CONTACT.whatsappPricingUrl)}" target="_blank" rel="noopener noreferrer" class="btn-action btn-whatsapp-clean">
@@ -623,7 +661,7 @@ export function renderParentPage(meta: ParentPageMeta): string {
           </div>
         </div>
         <div class="media-fallback-frame parent-hero-media" data-hero-media>
-          <img src="/assets/images/gta/img1.jpeg" alt="Professional HVAC technician performing air duct cleaning service" width="900" height="640" loading="eager" referrerpolicy="no-referrer" />
+          <img src="${escapeHtml(rel('/assets/images/gta/img1.jpeg'))}" alt="Professional HVAC technician performing air duct cleaning service" width="900" height="640" loading="eager" />
         </div>
       </div>
     </section>`;
@@ -633,12 +671,12 @@ export function renderParentPage(meta: ParentPageMeta): string {
       [
         heroHtml,
         renderKpiStripSection(),
-        renderServicesSection(false),
-        renderAboutSection(false),
-        renderWhyUsSection(false),
-        renderGallerySection(false),
-        renderReviewsSection(false),
-        renderPartnerDirectorySection(),
+        renderServicesSection(cur, false),
+        renderAboutSection(cur, false),
+        renderWhyUsSection(cur, false),
+        renderGallerySection(cur, false),
+        renderReviewsSection(cur, false),
+        renderPartnerDirectorySection(cur),
         renderCtaBannerSection(),
         renderContactSection(),
       ].join('\n')
@@ -655,7 +693,7 @@ export function renderParentPage(meta: ParentPageMeta): string {
     </section>`;
     return wrapParentDocument(
       meta,
-      [banner, renderServicesSection(true), renderCtaBannerSection()].join('\n')
+      [banner, renderServicesSection(cur, true), renderCtaBannerSection()].join('\n')
     );
   }
 
@@ -672,8 +710,8 @@ export function renderParentPage(meta: ParentPageMeta): string {
       [
         banner,
         renderKpiStripSection(),
-        renderAboutSection(true),
-        renderPartnerDirectorySection(),
+        renderAboutSection(cur, true),
+        renderPartnerDirectorySection(cur),
         renderCtaBannerSection(),
       ].join('\n')
     );
@@ -689,7 +727,7 @@ export function renderParentPage(meta: ParentPageMeta): string {
     </section>`;
     return wrapParentDocument(
       meta,
-      [banner, renderWhyUsSection(true), renderKpiStripSection(), renderCtaBannerSection()].join('\n')
+      [banner, renderWhyUsSection(cur, true), renderKpiStripSection(), renderCtaBannerSection()].join('\n')
     );
   }
 
@@ -703,7 +741,7 @@ export function renderParentPage(meta: ParentPageMeta): string {
     </section>`;
     return wrapParentDocument(
       meta,
-      [banner, renderGallerySection(true), renderCtaBannerSection()].join('\n')
+      [banner, renderGallerySection(cur, true), renderCtaBannerSection()].join('\n')
     );
   }
 
@@ -717,7 +755,7 @@ export function renderParentPage(meta: ParentPageMeta): string {
     </section>`;
     return wrapParentDocument(
       meta,
-      [banner, renderReviewsSection(true), renderCtaBannerSection()].join('\n')
+      [banner, renderReviewsSection(cur, true), renderCtaBannerSection()].join('\n')
     );
   }
 
@@ -744,13 +782,14 @@ export function renderNotFoundPage(): string {
     stylesheets: PARENT_STYLESHEETS,
     iconHref: '/assets/images/gta/Logo.jpg',
     includeParentAggregateRating: false,
+    useRootRelativeAssets: true,
   });
 
   return `<!DOCTYPE html>
 <html lang="en">
 ${head}
 <body class="parent-body">
-  ${renderParentHeader('')}
+  ${renderParentHeader('', true)}
   <main id="main-content" class="section-pad">
     <div class="container not-found-box">
       <p class="section-kicker">HTTP 404</p>
@@ -764,7 +803,7 @@ ${head}
       </div>
     </div>
   </main>
-  ${renderParentFooter()}
+  ${renderParentFooter('', true)}
   <script src="/assets/js/navigation.js" defer></script>
 </body>
 </html>

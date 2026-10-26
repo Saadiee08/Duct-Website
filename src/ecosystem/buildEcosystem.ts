@@ -32,6 +32,18 @@ export interface BuildSummary {
   readonly totalPublicHtmlCount: number;
 }
 
+const REQUIRED_GTA_IMAGES = [
+  'Logo.jpg',
+  'img1.jpeg',
+  'img2.jpeg',
+  'img3.jpeg',
+  'img4.jpeg',
+  'img5.jpeg',
+  'img6.jpeg',
+  'img7.jpeg',
+  'img8.jpeg',
+] as const;
+
 const GENERATED_EDITORIAL_IMAGE_MAP: ReadonlyArray<{
   readonly prefix: string;
   readonly targetName: string;
@@ -43,63 +55,159 @@ const GENERATED_EDITORIAL_IMAGE_MAP: ReadonlyArray<{
   { prefix: 'detail_clean_air_atrium_', targetName: 'clean-air-atrium.jpg' },
 ];
 
+const REQUIRED_VENDOR_SCRIPTS = ['gsap.min.js', 'ScrollTrigger.min.js'] as const;
+
 function writeTextFile(filePath: string, content: string): void {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, content, 'utf8');
 }
 
-function copyFileIfPresent(srcPath: string, destPath: string): boolean {
-  if (!fs.existsSync(srcPath)) {
-    return false;
+function copyFromFirstExistingSource(
+  candidateSources: readonly string[],
+  destPath: string
+): boolean {
+  const resolvedDest = path.resolve(destPath);
+  for (const srcPath of candidateSources) {
+    if (!fs.existsSync(srcPath)) {
+      continue;
+    }
+    const stat = fs.statSync(srcPath);
+    if (!stat.isFile() || stat.size === 0) {
+      continue;
+    }
+    if (path.resolve(srcPath) === resolvedDest) {
+      return true;
+    }
+    fs.mkdirSync(path.dirname(destPath), { recursive: true });
+    fs.copyFileSync(srcPath, destPath);
+    return true;
   }
-  fs.mkdirSync(path.dirname(destPath), { recursive: true });
-  fs.copyFileSync(srcPath, destPath);
-  return true;
+  return false;
+}
+
+function verifyRequiredOutputAssets(outputRoot: string): void {
+  const missing: string[] = [];
+
+  for (const fileName of REQUIRED_GTA_IMAGES) {
+    const p = path.join(outputRoot, 'assets', 'images', 'gta', fileName);
+    if (!fs.existsSync(p) || fs.statSync(p).size === 0) {
+      missing.push(`assets/images/gta/${fileName}`);
+    }
+  }
+
+  for (const mapping of GENERATED_EDITORIAL_IMAGE_MAP) {
+    const p = path.join(
+      outputRoot,
+      'assets',
+      'images',
+      'editorial',
+      mapping.targetName
+    );
+    if (!fs.existsSync(p) || fs.statSync(p).size === 0) {
+      missing.push(`assets/images/editorial/${mapping.targetName}`);
+    }
+  }
+
+  for (const scriptName of REQUIRED_VENDOR_SCRIPTS) {
+    const p = path.join(outputRoot, 'assets', 'js', 'vendor', scriptName);
+    if (!fs.existsSync(p) || fs.statSync(p).size === 0) {
+      missing.push(`assets/js/vendor/${scriptName}`);
+    }
+  }
+
+  if (missing.length > 0) {
+    throw new Error(
+      `[ecosystem-build] Missing required build assets in ${outputRoot}: ${missing.join(', ')}`
+    );
+  }
 }
 
 function copyAssetsIntoOutput(workspaceRoot: string, outputRoot: string): void {
-  // 1. Copy verified GTA Duct Masters live site assets
-  const gtaSrcDir = path.join(workspaceRoot, 'public', 'assets', 'images', 'gta');
+  // 1. Copy verified GTA Duct Masters live site images (checking public/assets first, then gtaductmasters/ fallback)
   const gtaDestDir = path.join(outputRoot, 'assets', 'images', 'gta');
-  if (fs.existsSync(gtaSrcDir)) {
-    fs.mkdirSync(gtaDestDir, { recursive: true });
-    for (const entry of fs.readdirSync(gtaSrcDir)) {
-      copyFileIfPresent(
-        path.join(gtaSrcDir, entry),
-        path.join(gtaDestDir, entry)
-      );
-    }
+  fs.mkdirSync(gtaDestDir, { recursive: true });
+  for (const fileName of REQUIRED_GTA_IMAGES) {
+    copyFromFirstExistingSource(
+      [
+        path.join(workspaceRoot, 'public', 'assets', 'images', 'gta', fileName),
+        path.join(
+          workspaceRoot,
+          'gtaductmasters',
+          'assets',
+          'images',
+          'gta',
+          fileName
+        ),
+      ],
+      path.join(gtaDestDir, fileName)
+    );
   }
 
-  // 2. Copy high-resolution generated editorial assets to deterministic paths
-  const generatedSrcDir = path.join(workspaceRoot, 'src', 'assets', 'images');
+  // 2. Copy high-resolution editorial images to deterministic paths
   const editorialDestDir = path.join(outputRoot, 'assets', 'images', 'editorial');
   fs.mkdirSync(editorialDestDir, { recursive: true });
+  const generatedSrcDir = path.join(workspaceRoot, 'src', 'assets', 'images');
+  const availableGenerated = fs.existsSync(generatedSrcDir)
+    ? fs.readdirSync(generatedSrcDir)
+    : [];
 
-  if (fs.existsSync(generatedSrcDir)) {
-    const availableFiles = fs.readdirSync(generatedSrcDir);
-    for (const mapping of GENERATED_EDITORIAL_IMAGE_MAP) {
-      const matched = availableFiles.find((f) => f.startsWith(mapping.prefix));
-      if (matched) {
-        copyFileIfPresent(
-          path.join(generatedSrcDir, matched),
-          path.join(editorialDestDir, mapping.targetName)
-        );
-      }
+  for (const mapping of GENERATED_EDITORIAL_IMAGE_MAP) {
+    const matchedGenerated = availableGenerated.find((f) =>
+      f.startsWith(mapping.prefix)
+    );
+    const candidates: string[] = [
+      path.join(
+        workspaceRoot,
+        'public',
+        'assets',
+        'images',
+        'editorial',
+        mapping.targetName
+      ),
+    ];
+    if (matchedGenerated) {
+      candidates.push(path.join(generatedSrcDir, matchedGenerated));
     }
+    candidates.push(
+      path.join(
+        workspaceRoot,
+        'gtaductmasters',
+        'assets',
+        'images',
+        'editorial',
+        mapping.targetName
+      )
+    );
+
+    copyFromFirstExistingSource(
+      candidates,
+      path.join(editorialDestDir, mapping.targetName)
+    );
   }
 
-  // 3. Copy local GSAP + ScrollTrigger vendor scripts (strict 'self' CSP)
-  const gsapDistDir = path.join(workspaceRoot, 'node_modules', 'gsap', 'dist');
+  // 3. Copy local GSAP + ScrollTrigger vendor scripts (checking node_modules, public/assets, and gtaductmasters/)
   const vendorDestDir = path.join(outputRoot, 'assets', 'js', 'vendor');
-  copyFileIfPresent(
-    path.join(gsapDistDir, 'gsap.min.js'),
-    path.join(vendorDestDir, 'gsap.min.js')
-  );
-  copyFileIfPresent(
-    path.join(gsapDistDir, 'ScrollTrigger.min.js'),
-    path.join(vendorDestDir, 'ScrollTrigger.min.js')
-  );
+  fs.mkdirSync(vendorDestDir, { recursive: true });
+  for (const scriptName of REQUIRED_VENDOR_SCRIPTS) {
+    copyFromFirstExistingSource(
+      [
+        path.join(workspaceRoot, 'node_modules', 'gsap', 'dist', scriptName),
+        path.join(workspaceRoot, 'public', 'assets', 'js', 'vendor', scriptName),
+        path.join(
+          workspaceRoot,
+          'gtaductmasters',
+          'assets',
+          'js',
+          'vendor',
+          scriptName
+        ),
+      ],
+      path.join(vendorDestDir, scriptName)
+    );
+  }
+
+  // 4. Enforce non-empty asset presence so Netlify / GitHub builds can never publish missing images
+  verifyRequiredOutputAssets(outputRoot);
 }
 
 /**
@@ -109,7 +217,7 @@ function copyAssetsIntoOutput(workspaceRoot: string, outputRoot: string): void {
  * - 30 physical HTML pages for the 15 linked companies (Home + About Us)
  * - 15 independent company stylesheets (/<slug>/assets/css/theme.css)
  * - Modular shared CSS & JS utilities
- * - 404.html, sitemap.xml, robots.txt, _headers, _redirects
+ * - 404.html, sitemap.xml, robots.txt, _headers, _redirects, .nojekyll
  */
 export function buildEcosystemToDirectory(
   workspaceRoot: string,
@@ -141,7 +249,7 @@ export function buildEcosystemToDirectory(
     GALLERY_REVIEWS_JS
   );
 
-  // Copy local images and GSAP vendor files
+  // Copy local images and GSAP vendor files (with strict verification)
   copyAssetsIntoOutput(workspaceRoot, outputRoot);
 
   // 1. Generate all 7 Parent Website physical HTML pages
@@ -186,7 +294,7 @@ export function buildEcosystemToDirectory(
     linkedHtmlCount += 1;
   }
 
-  // Technical SEO & portable static-host security configs
+  // Technical SEO & portable static-host security configs (Netlify + GitHub Pages .nojekyll)
   writeTextFile(path.join(outputRoot, 'sitemap.xml'), renderSitemapXml());
   writeTextFile(path.join(outputRoot, 'robots.txt'), renderRobotsTxt());
   writeTextFile(path.join(outputRoot, '_headers'), renderStaticHostHeaders());
@@ -194,6 +302,7 @@ export function buildEcosystemToDirectory(
     path.join(outputRoot, '_redirects'),
     renderStaticHostRedirects()
   );
+  writeTextFile(path.join(outputRoot, '.nojekyll'), '');
 
   return {
     outputRoot,

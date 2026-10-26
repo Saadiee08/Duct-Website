@@ -1,4 +1,5 @@
 import { renderQuoteFormBlock } from './parentTemplates.ts';
+import { toRelativeUrl } from './paths.ts';
 import { escapeHtml } from './security.ts';
 import { renderSeoHead } from './seo.ts';
 import type { CompanyTheme } from './themes.ts';
@@ -22,16 +23,19 @@ function renderCompanyHeader(
   activePage: 'home' | 'about'
 ): string {
   const { company, headerVariant } = theme;
+  const currentUrlPath = activePage === 'home' ? company.homeUrl : company.aboutUrl;
+  const rel = (target: string) => toRelativeUrl(currentUrlPath, target);
   const homeCurrent = activePage === 'home' ? ' aria-current="page"' : '';
   const aboutCurrent = activePage === 'about' ? ' aria-current="page"' : '';
-  const quoteHref = activePage === 'home' ? '#inquiry' : `${company.homeUrl}#inquiry`;
+  const quoteHref =
+    activePage === 'home' ? '#inquiry' : rel(`${company.homeUrl}#inquiry`);
 
   const navMarkup = `<nav class="brand-nav" aria-label="Primary navigation">
-        <a href="${escapeHtml(company.homeUrl)}" data-page-transition${homeCurrent}>Home</a>
-        <a href="${escapeHtml(company.aboutUrl)}" data-page-transition${aboutCurrent}>About Us</a>
+        <a href="${escapeHtml(rel(company.homeUrl))}" data-page-transition${homeCurrent}>Home</a>
+        <a href="${escapeHtml(rel(company.aboutUrl))}" data-page-transition${aboutCurrent}>About Us</a>
       </nav>`;
 
-  const wordmarkMarkup = `<a href="${escapeHtml(company.homeUrl)}" class="brand-wordmark" data-page-transition>${escapeHtml(company.exactName)}</a>`;
+  const wordmarkMarkup = `<a href="${escapeHtml(rel(company.homeUrl))}" class="brand-wordmark" data-page-transition>${escapeHtml(company.exactName)}</a>`;
 
   const ctaZone = `<div class="brand-header-cta-zone">
         <a href="${escapeHtml(quoteHref)}" class="btn-action btn-brand-primary header-cta-desktop">Request Quote</a>
@@ -51,8 +55,8 @@ function renderCompanyHeader(
     </div>
     <div class="mobile-drawer" id="mobile-nav-drawer" hidden>
       <nav class="mobile-drawer-links" aria-label="Mobile navigation">
-        <a href="${escapeHtml(company.homeUrl)}" data-page-transition${homeCurrent}>Home</a>
-        <a href="${escapeHtml(company.aboutUrl)}" data-page-transition${aboutCurrent}>About Us</a>
+        <a href="${escapeHtml(rel(company.homeUrl))}" data-page-transition${homeCurrent}>Home</a>
+        <a href="${escapeHtml(rel(company.aboutUrl))}" data-page-transition${aboutCurrent}>About Us</a>
       </nav>
       <a href="${escapeHtml(VERIFIED_CONTACT.phoneHref)}" class="btn-action btn-brand-primary tabular-nums w-full">
         Call ${escapeHtml(VERIFIED_CONTACT.phoneDisplay)}
@@ -66,6 +70,8 @@ function renderCompanyHeader(
  */
 function renderCompanyHero(theme: CompanyTheme): string {
   const { company, heroVariant, palette } = theme;
+  const rel = (target: string) => toRelativeUrl(company.homeUrl, target);
+  const heroImgSrc = rel(theme.heroImage);
   const darkSurfaceClass = isDarkHex(palette.heroBg) ? ' hero-dark-surface' : '';
 
   const actionsHtml = `<div class="brand-hero-actions" data-hero-animate>
@@ -76,7 +82,7 @@ function renderCompanyHero(theme: CompanyTheme): string {
   if (heroVariant === 'fullbleed-framed') {
     return `<section class="brand-hero hero-fullbleed hero-dark-surface" aria-labelledby="hero-title">
       <div class="hero-fullbleed-bg brand-media-frame" aria-hidden="true">
-        <img src="${escapeHtml(theme.heroImage)}" alt="" width="1600" height="900" loading="eager" referrerpolicy="no-referrer" />
+        <img src="${escapeHtml(heroImgSrc)}" alt="" width="1600" height="900" loading="eager" />
         <div class="hero-fullbleed-scrim"></div>
       </div>
       <div class="container">
@@ -100,7 +106,7 @@ function renderCompanyHero(theme: CompanyTheme): string {
           ${actionsHtml}
         </div>
         <div class="media-fallback-frame brand-media-frame hero-panoramic-media" data-hero-media>
-          <img src="${escapeHtml(theme.heroImage)}" alt="${escapeHtml(theme.heroImageAlt)}" width="1440" height="620" loading="eager" referrerpolicy="no-referrer" />
+          <img src="${escapeHtml(heroImgSrc)}" alt="${escapeHtml(theme.heroImageAlt)}" width="1440" height="620" loading="eager" />
         </div>
       </div>
     </section>`;
@@ -126,7 +132,7 @@ function renderCompanyHero(theme: CompanyTheme): string {
           </div>
         </div>
         <div class="media-fallback-frame brand-media-frame hero-framed-media" data-hero-media>
-          <img src="${escapeHtml(theme.heroImage)}" alt="${escapeHtml(theme.heroImageAlt)}" width="960" height="640" loading="eager" referrerpolicy="no-referrer" />
+          <img src="${escapeHtml(heroImgSrc)}" alt="${escapeHtml(theme.heroImageAlt)}" width="960" height="640" loading="eager" />
         </div>
       </div>
     </section>`;
@@ -146,7 +152,7 @@ function renderCompanyHero(theme: CompanyTheme): string {
           </div>
         </div>
         <div class="media-fallback-frame brand-media-frame hero-marquee-plate" data-hero-media>
-          <img src="${escapeHtml(theme.heroImage)}" alt="${escapeHtml(theme.heroImageAlt)}" width="1400" height="600" loading="eager" referrerpolicy="no-referrer" />
+          <img src="${escapeHtml(heroImgSrc)}" alt="${escapeHtml(theme.heroImageAlt)}" width="1400" height="600" loading="eager" />
         </div>
       </div>
     </section>`;
@@ -168,7 +174,7 @@ function renderCompanyHero(theme: CompanyTheme): string {
           </div>
         </div>
         <div class="media-fallback-frame brand-media-frame hero-panoramic-media hero-stark-plate" data-hero-media>
-          <img src="${escapeHtml(theme.heroImage)}" alt="${escapeHtml(theme.heroImageAlt)}" width="1440" height="620" loading="eager" referrerpolicy="no-referrer" />
+          <img src="${escapeHtml(heroImgSrc)}" alt="${escapeHtml(theme.heroImageAlt)}" width="1440" height="620" loading="eager" />
         </div>
       </div>
     </section>`;
@@ -189,7 +195,7 @@ function renderCompanyHero(theme: CompanyTheme): string {
             ${actionsHtml}
           </div>
           <div class="media-fallback-frame brand-media-frame hero-framed-media" data-hero-media>
-            <img src="${escapeHtml(theme.heroImage)}" alt="${escapeHtml(theme.heroImageAlt)}" width="960" height="640" loading="eager" referrerpolicy="no-referrer" />
+            <img src="${escapeHtml(heroImgSrc)}" alt="${escapeHtml(theme.heroImageAlt)}" width="960" height="640" loading="eager" />
           </div>
         </div>
       </div>
@@ -206,7 +212,7 @@ function renderCompanyHero(theme: CompanyTheme): string {
         </div>`;
 
   const mediaBlock = `<figure class="media-fallback-frame brand-media-frame hero-framed-media" data-hero-media>
-          <img src="${escapeHtml(theme.heroImage)}" alt="${escapeHtml(theme.heroImageAlt)}" width="960" height="680" loading="eager" referrerpolicy="no-referrer" />
+          <img src="${escapeHtml(heroImgSrc)}" alt="${escapeHtml(theme.heroImageAlt)}" width="960" height="680" loading="eager" />
         </figure>`;
 
   return `<section class="brand-hero${darkSurfaceClass}" aria-labelledby="hero-title">
@@ -221,6 +227,7 @@ function renderCompanyHero(theme: CompanyTheme): string {
  */
 function renderCompanyServicesSection(theme: CompanyTheme): string {
   const { servicesVariant, company } = theme;
+  const rel = (target: string) => toRelativeUrl(company.homeUrl, target);
 
   const sectionHeader = `<div class="brand-section-head">
         <div>
@@ -228,7 +235,7 @@ function renderCompanyServicesSection(theme: CompanyTheme): string {
           <h2 id="services-heading" class="brand-section-title">Air Duct, Dryer Vent &amp; HVAC Cleaning</h2>
           <p class="brand-section-sub">Complete mechanical cleaning services delivered by ${escapeHtml(company.exactName)} across residential and commercial ventilation systems.</p>
         </div>
-        <a href="${escapeHtml(company.aboutUrl)}" data-page-transition class="btn-action btn-brand-outline">About ${escapeHtml(company.exactName)}</a>
+        <a href="${escapeHtml(rel(company.aboutUrl))}" data-page-transition class="btn-action btn-brand-outline">About ${escapeHtml(company.exactName)}</a>
       </div>`;
 
   if (servicesVariant === 'hairline-rows') {
@@ -265,7 +272,7 @@ ${rows}
           ${
             idx === 0
               ? `<div class="media-fallback-frame brand-media-frame bento-lead-media">
-              <img src="${escapeHtml(theme.secondaryImage)}" alt="${escapeHtml(theme.secondaryImageAlt)}" width="960" height="420" loading="lazy" referrerpolicy="no-referrer" />
+              <img src="${escapeHtml(rel(theme.secondaryImage))}" alt="${escapeHtml(theme.secondaryImageAlt)}" width="960" height="420" loading="lazy" />
             </div>`
               : ''
           }
@@ -324,7 +331,7 @@ ${pillars}
         .join('\n');
       return `        <article class="svc-alt-row" data-reveal-item>
           <div class="media-fallback-frame brand-media-frame svc-alt-media">
-            <img src="${escapeHtml(svc.imageSrc)}" alt="${escapeHtml(svc.imageAlt)}" width="800" height="500" loading="lazy" referrerpolicy="no-referrer" />
+            <img src="${escapeHtml(rel(svc.imageSrc))}" alt="${escapeHtml(svc.imageAlt)}" width="800" height="500" loading="lazy" />
           </div>
           <div>
             <span class="svc-index tabular-nums">0${idx + 1}. Service Line</span>
@@ -368,7 +375,7 @@ ${rows}
 ${listItems}
           </div>
           <div class="media-fallback-frame brand-media-frame framed-4x3-plate">
-            <img src="${escapeHtml(theme.secondaryImage)}" alt="${escapeHtml(theme.secondaryImageAlt)}" width="800" height="600" loading="lazy" referrerpolicy="no-referrer" />
+            <img src="${escapeHtml(rel(theme.secondaryImage))}" alt="${escapeHtml(theme.secondaryImageAlt)}" width="800" height="600" loading="lazy" />
           </div>
         </div>
       </div>
@@ -423,7 +430,7 @@ ${cards}
         <div class="svc-broadsheet-grid">
           <article class="broadsheet-lead-card" data-reveal-item>
             <div class="media-fallback-frame brand-media-frame broadsheet-lead-media">
-              <img src="${escapeHtml(theme.secondaryImage)}" alt="${escapeHtml(theme.secondaryImageAlt)}" width="900" height="506" loading="lazy" referrerpolicy="no-referrer" />
+              <img src="${escapeHtml(rel(theme.secondaryImage))}" alt="${escapeHtml(theme.secondaryImageAlt)}" width="900" height="506" loading="lazy" />
             </div>
             <span class="svc-index tabular-nums">01. Primary Service</span>
             <h3 class="svc-title">${escapeHtml(lead.title)}</h3>
@@ -503,6 +510,7 @@ ${cells}
 
 function renderCompanyOverviewAndInquirySection(theme: CompanyTheme): string {
   const { company } = theme;
+  const rel = (target: string) => toRelativeUrl(company.homeUrl, target);
   return `<section class="section-pad surface-alt-top" aria-labelledby="overview-heading">
     <div class="container hero-split-grid py-0" data-reveal-group>
       <div class="hero-split-copy" data-reveal-item>
@@ -515,11 +523,11 @@ function renderCompanyOverviewAndInquirySection(theme: CompanyTheme): string {
           Whether servicing residential supply and return ducts, cleaning HVAC evaporator coils and blowers, clearing lint-obstructed dryer vents, or coordinating after-hours commercial maintenance, every appointment begins with clear, upfront communication.
         </p>
         <div>
-          <a href="${escapeHtml(company.aboutUrl)}" data-page-transition class="btn-action btn-brand-outline">Read More on About Us &rarr;</a>
+          <a href="${escapeHtml(rel(company.aboutUrl))}" data-page-transition class="btn-action btn-brand-outline">Read More on About Us &rarr;</a>
         </div>
       </div>
       <div class="media-fallback-frame brand-media-frame framed-4x3-plate" data-reveal-item>
-        <img src="${escapeHtml(theme.secondaryImage)}" alt="${escapeHtml(theme.secondaryImageAlt)}" width="800" height="600" loading="lazy" referrerpolicy="no-referrer" />
+        <img src="${escapeHtml(rel(theme.secondaryImage))}" alt="${escapeHtml(theme.secondaryImageAlt)}" width="800" height="600" loading="lazy" />
       </div>
     </div>
   </section>
@@ -564,6 +572,10 @@ function renderCompanyOverviewAndInquirySection(theme: CompanyTheme): string {
  */
 function renderCompanyAboutMain(theme: CompanyTheme): string {
   const { company, aboutVariant, palette } = theme;
+  const rel = (target: string) => toRelativeUrl(company.aboutUrl, target);
+  const aboutImgSrc = rel(theme.aboutImage);
+  const homeHref = rel(company.homeUrl);
+  const homeInquiryHref = rel(`${company.homeUrl}#inquiry`);
   const darkSurfaceClass = isDarkHex(palette.heroBg) ? ' hero-dark-surface' : '';
 
   const introBanner = `<section class="brand-hero about-banner-pad${darkSurfaceClass}" aria-labelledby="about-h1">
@@ -594,7 +606,7 @@ function renderCompanyAboutMain(theme: CompanyTheme): string {
             ${escapeHtml(theme.methodologyStatement)} We coordinate directly with homeowners and commercial property operators to deliver clear, itemized service estimates and flexible scheduling seven days a week.
           </p>
           <div class="media-fallback-frame brand-media-frame framed-16x9-plate">
-            <img src="${escapeHtml(theme.aboutImage)}" alt="${escapeHtml(theme.aboutImageAlt)}" width="960" height="540" loading="lazy" referrerpolicy="no-referrer" />
+            <img src="${escapeHtml(aboutImgSrc)}" alt="${escapeHtml(theme.aboutImageAlt)}" width="960" height="540" loading="lazy" />
           </div>
         </div>
         <aside class="about-sidebar-stack" data-reveal-item>
@@ -609,7 +621,7 @@ function renderCompanyAboutMain(theme: CompanyTheme): string {
             <p class="tabular-nums about-note-phone">${escapeHtml(VERIFIED_CONTACT.phoneDisplay)}</p>
             <p class="about-note-email">${escapeHtml(VERIFIED_CONTACT.email)}</p>
             <p class="muted-note-sm mb-md">${escapeHtml(VERIFIED_CONTACT.hoursDisplay)}</p>
-            <a href="${escapeHtml(company.homeUrl)}#inquiry" data-page-transition class="btn-action btn-brand-primary w-full">Request Quote on Home</a>
+            <a href="${escapeHtml(homeInquiryHref)}" data-page-transition class="btn-action btn-brand-primary w-full">Request Quote on Home</a>
           </div>
         </aside>
       </div>
@@ -631,7 +643,7 @@ function renderCompanyAboutMain(theme: CompanyTheme): string {
         </blockquote>
 
         <div class="media-fallback-frame brand-media-frame framed-21x9-plate" data-reveal-item>
-          <img src="${escapeHtml(theme.aboutImage)}" alt="${escapeHtml(theme.aboutImageAlt)}" width="1320" height="565" loading="lazy" referrerpolicy="no-referrer" />
+          <img src="${escapeHtml(aboutImgSrc)}" alt="${escapeHtml(theme.aboutImageAlt)}" width="1320" height="565" loading="lazy" />
         </div>
       </div>
     </section>`;
@@ -647,12 +659,12 @@ function renderCompanyAboutMain(theme: CompanyTheme): string {
             ${escapeHtml(theme.methodologyStatement)}
           </p>
           <div class="flex-wrap-actions">
-            <a href="${escapeHtml(company.homeUrl)}#inquiry" data-page-transition class="btn-action btn-brand-primary">Request a Free Quote</a>
+            <a href="${escapeHtml(homeInquiryHref)}" data-page-transition class="btn-action btn-brand-primary">Request a Free Quote</a>
             <a href="${escapeHtml(VERIFIED_CONTACT.phoneHref)}" class="btn-action btn-brand-outline tabular-nums">Call ${escapeHtml(VERIFIED_CONTACT.phoneDisplay)}</a>
           </div>
         </div>
         <div class="media-fallback-frame brand-media-frame framed-4x3-plate" data-reveal-item>
-          <img src="${escapeHtml(theme.aboutImage)}" alt="${escapeHtml(theme.aboutImageAlt)}" width="840" height="630" loading="lazy" referrerpolicy="no-referrer" />
+          <img src="${escapeHtml(aboutImgSrc)}" alt="${escapeHtml(theme.aboutImageAlt)}" width="840" height="630" loading="lazy" />
         </div>
       </div>
     </section>`;
@@ -665,7 +677,7 @@ function renderCompanyAboutMain(theme: CompanyTheme): string {
           <p class="kicker-accent">Technical Service Standards</p>
           <h2 id="scope-heading" class="brand-section-title">Core Ventilation &amp; HVAC Disciplines</h2>
         </div>
-        <a href="${escapeHtml(company.homeUrl)}" data-page-transition class="btn-action btn-brand-outline">&larr; Return to Home</a>
+        <a href="${escapeHtml(homeHref)}" data-page-transition class="btn-action btn-brand-outline">&larr; Return to Home</a>
       </div>
       <dl class="spec-dl">
 ${serviceDefinitions}
@@ -676,13 +688,17 @@ ${serviceDefinitions}
   return `${introBanner}\n${bodySection}\n${technicalScopeSection}`;
 }
 
-function renderCompanyFooter(theme: CompanyTheme): string {
+function renderCompanyFooter(
+  theme: CompanyTheme,
+  currentUrlPath: string
+): string {
   const { company, footerVariant } = theme;
+  const rel = (target: string) => toRelativeUrl(currentUrlPath, target);
   return `<footer class="brand-footer brand-footer--${footerVariant}">
     <div class="container">
       <div class="brand-footer-grid">
         <div>
-          <a href="${escapeHtml(company.homeUrl)}" class="brand-wordmark brand-wordmark--footer" data-page-transition>${escapeHtml(company.exactName)}</a>
+          <a href="${escapeHtml(rel(company.homeUrl))}" class="brand-wordmark brand-wordmark--footer" data-page-transition>${escapeHtml(company.exactName)}</a>
           <p class="brand-footer-muted footer-desc-measure">
             Professional residential and commercial air duct cleaning, HVAC system cleaning, and dryer vent maintenance.
           </p>
@@ -691,8 +707,8 @@ function renderCompanyFooter(theme: CompanyTheme): string {
         <div>
           <h3 class="footer-heading-sm">Navigation</h3>
           <nav class="brand-footer-nav" aria-label="Footer navigation">
-            <a href="${escapeHtml(company.homeUrl)}" data-page-transition>Home</a>
-            <a href="${escapeHtml(company.aboutUrl)}" data-page-transition>About Us</a>
+            <a href="${escapeHtml(rel(company.homeUrl))}" data-page-transition>Home</a>
+            <a href="${escapeHtml(rel(company.aboutUrl))}" data-page-transition>About Us</a>
           </nav>
         </div>
 
@@ -709,7 +725,7 @@ function renderCompanyFooter(theme: CompanyTheme): string {
 
       <div class="brand-footer-bottom">
         <p>&copy; <span data-current-year>2026</span> ${escapeHtml(company.exactName)}. All rights reserved.</p>
-        <p>Affiliated with the <a href="/" class="underline-link">GTA Duct Masters</a> Service Network.</p>
+        <p>Affiliated with the <a href="${escapeHtml(rel('/'))}" class="underline-link">GTA Duct Masters</a> Service Network.</p>
       </div>
     </div>
   </footer>`;
@@ -717,6 +733,8 @@ function renderCompanyFooter(theme: CompanyTheme): string {
 
 export function renderLinkedCompanyHomePage(theme: CompanyTheme): string {
   const { company } = theme;
+  const cur = company.homeUrl;
+  const rel = (target: string) => toRelativeUrl(cur, target);
   const themeCssHref = `/${company.slug}/assets/css/theme.css`;
 
   const head = renderSeoHead({
@@ -757,12 +775,12 @@ ${head}
     ${renderCompanyServicesSection(theme)}
     ${renderCompanyOverviewAndInquirySection(theme)}
   </main>
-  ${renderCompanyFooter(theme)}
-  <script src="/assets/js/vendor/gsap.min.js" defer></script>
-  <script src="/assets/js/vendor/ScrollTrigger.min.js" defer></script>
-  <script src="/assets/js/navigation.js" defer></script>
-  <script src="/assets/js/motion.js" defer></script>
-  <script src="/assets/js/forms.js" defer></script>
+  ${renderCompanyFooter(theme, cur)}
+  <script src="${escapeHtml(rel('/assets/js/vendor/gsap.min.js'))}" defer></script>
+  <script src="${escapeHtml(rel('/assets/js/vendor/ScrollTrigger.min.js'))}" defer></script>
+  <script src="${escapeHtml(rel('/assets/js/navigation.js'))}" defer></script>
+  <script src="${escapeHtml(rel('/assets/js/motion.js'))}" defer></script>
+  <script src="${escapeHtml(rel('/assets/js/forms.js'))}" defer></script>
 </body>
 </html>
 `;
@@ -770,6 +788,8 @@ ${head}
 
 export function renderLinkedCompanyAboutPage(theme: CompanyTheme): string {
   const { company } = theme;
+  const cur = company.aboutUrl;
+  const rel = (target: string) => toRelativeUrl(cur, target);
   const themeCssHref = `/${company.slug}/assets/css/theme.css`;
 
   const head = renderSeoHead({
@@ -799,11 +819,11 @@ ${head}
   <main id="main-content">
     ${renderCompanyAboutMain(theme)}
   </main>
-  ${renderCompanyFooter(theme)}
-  <script src="/assets/js/vendor/gsap.min.js" defer></script>
-  <script src="/assets/js/vendor/ScrollTrigger.min.js" defer></script>
-  <script src="/assets/js/navigation.js" defer></script>
-  <script src="/assets/js/motion.js" defer></script>
+  ${renderCompanyFooter(theme, cur)}
+  <script src="${escapeHtml(rel('/assets/js/vendor/gsap.min.js'))}" defer></script>
+  <script src="${escapeHtml(rel('/assets/js/vendor/ScrollTrigger.min.js'))}" defer></script>
+  <script src="${escapeHtml(rel('/assets/js/navigation.js'))}" defer></script>
+  <script src="${escapeHtml(rel('/assets/js/motion.js'))}" defer></script>
 </body>
 </html>
 `;

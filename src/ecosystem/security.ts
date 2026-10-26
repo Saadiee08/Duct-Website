@@ -77,7 +77,7 @@ export function buildSecurityHeaders(
     "style-src-elem 'self' https://fonts.googleapis.com",
     "style-src-attr 'unsafe-inline'",
     "font-src 'self' https://fonts.gstatic.com data:",
-    "img-src 'self' data:",
+    "img-src 'self' data: blob: https:",
     "connect-src 'self'",
     "object-src 'none'",
     "base-uri 'self'",
@@ -95,7 +95,7 @@ export function buildSecurityHeaders(
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'Permissions-Policy':
       'camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
-    'Cross-Origin-Resource-Policy': 'same-origin',
+    'Cross-Origin-Resource-Policy': 'cross-origin',
   };
 
   if (options.isProduction) {

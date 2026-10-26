@@ -1,3 +1,4 @@
+import { toRelativeUrl } from './paths.ts';
 import { escapeHtml, buildSecurityHeaders } from './security.ts';
 import {
   PRIMARY_DOMAIN,
@@ -16,6 +17,7 @@ export interface SeoHeadInput {
   readonly stylesheets: readonly string[];
   readonly iconHref: string;
   readonly includeParentAggregateRating: boolean;
+  readonly useRootRelativeAssets?: boolean;
 }
 
 export function renderSeoHead(input: SeoHeadInput): string {
@@ -66,8 +68,16 @@ export function renderSeoHead(input: SeoHeadInput): string {
   }
 
   const stylesheetTags = input.stylesheets
-    .map((href) => `  <link rel="stylesheet" href="${escapeHtml(href)}" />`)
+    .map((href) => {
+      const resolvedHref = input.useRootRelativeAssets
+        ? href
+        : toRelativeUrl(input.canonicalPath, href);
+      return `  <link rel="stylesheet" href="${escapeHtml(resolvedHref)}" />`;
+    })
     .join('\n');
+  const resolvedIconHref = input.useRootRelativeAssets
+    ? input.iconHref
+    : toRelativeUrl(input.canonicalPath, input.iconHref);
 
   return `<head>
   <meta charset="UTF-8" />
@@ -99,7 +109,7 @@ export function renderSeoHead(input: SeoHeadInput): string {
 
   <!-- Modular Stylesheets -->
 ${stylesheetTags}
-  <link rel="icon" href="${escapeHtml(input.iconHref)}" />
+  <link rel="icon" href="${escapeHtml(resolvedIconHref)}" />
 
   <!-- Schema.org Structured Data (Verified Business Details Only) -->
   <script type="application/ld+json">
@@ -155,9 +165,7 @@ ${lines.join('\n')}
 }
 
 export function renderStaticHostRedirects(): string {
-  return `# Canonical clean URLs & 404 fallback for static hosts (e.g., Netlify)
+  return `# Netlify serves physical <dir>/index.html clean URLs and /404.html natively
 /index.html           /                     301!
-/*/index.html         /:splat/              301!
-/*                    /404.html             404
 `;
 }
