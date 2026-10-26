@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — Northern Air Duct Cleaning (Refined Commercial Premium) */
+:root {
+  --brand-canvas: #F9F8F4;
+  --brand-surface: #FFFFFF;
+  --brand-surface-alt: #ECEAE2;
+  --brand-ink: #0F2E2F;
+  --brand-ink-muted: #495E5F;
+  --brand-primary: #0F3D3E;
+  --brand-primary-fg: #F9F8F4;
+  --brand-accent: #A4552B;
+  --brand-border: #D5D2C6;
+  --brand-hero-bg: #0F3D3E;
+  --brand-hero-fg: #F9F8F4;
+  --brand-hero-muted: #CBE0E0;
+  --brand-footer-bg: #0A2728;
+  --brand-footer-fg: #F9F8F4;
+  --brand-footer-muted: #99B5B6;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Public Sans', system-ui, sans-serif;
+  --display-weight: 600;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: none; letter-spacing: -0.01em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.04) saturate(0.95);
+}

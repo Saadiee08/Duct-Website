@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — PureBreeze Duct Care (Modern Architectural Luxury) */
+:root {
+  --brand-canvas: #FFFFFF;
+  --brand-surface: #F4F7FA;
+  --brand-surface-alt: #E8EDF2;
+  --brand-ink: #13293D;
+  --brand-ink-muted: #4A5D70;
+  --brand-primary: #1B4965;
+  --brand-primary-fg: #FFFFFF;
+  --brand-accent: #2C6E91;
+  --brand-border: #D4DEE8;
+  --brand-hero-bg: #F4F7FA;
+  --brand-hero-fg: #13293D;
+  --brand-hero-muted: #415568;
+  --brand-footer-bg: #0E2030;
+  --brand-footer-fg: #F4F7FA;
+  --brand-footer-muted: #96AABF;
+  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-body: 'Public Sans', system-ui, sans-serif;
+  --display-weight: 600;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: none; letter-spacing: -0.01em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.03) saturate(0.98);
+}

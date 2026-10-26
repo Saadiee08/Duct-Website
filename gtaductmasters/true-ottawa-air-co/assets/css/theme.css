@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — True Ottawa Air CO. (Sophisticated Minimalism) */
+:root {
+  --brand-canvas: #FFFFFF;
+  --brand-surface: #F7F4ED;
+  --brand-surface-alt: #EFEAE0;
+  --brand-ink: #1E2022;
+  --brand-ink-muted: #52575C;
+  --brand-primary: #1E2022;
+  --brand-primary-fg: #FFFFFF;
+  --brand-accent: #8A6D3B;
+  --brand-border: #E4DEC9;
+  --brand-hero-bg: #F7F4ED;
+  --brand-hero-fg: #1E2022;
+  --brand-hero-muted: #4A4E53;
+  --brand-footer-bg: #181A1C;
+  --brand-footer-fg: #F7F4ED;
+  --brand-footer-muted: #A3A8AE;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --display-weight: 600;
+  --radius-sm: 0px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: none; letter-spacing: 0.01em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.02) saturate(0.9);
+}

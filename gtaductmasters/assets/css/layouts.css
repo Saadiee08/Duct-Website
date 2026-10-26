@@ -1,0 +1,1043 @@
+/* Multi-Archetype Structural Layouts for the 15 Distinct Classical Brands */
+
+/* ─── BRAND HEADERS (Strictly Home | About Us + 1 CTA) ─── */
+.brand-header {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: var(--brand-canvas);
+  border-bottom: 1px solid var(--brand-border);
+}
+
+.brand-header--atelier-double {
+  border-bottom: 3px double var(--brand-border);
+}
+
+.brand-header--editorial-masthead {
+  background: var(--brand-surface);
+  border-bottom: 2px solid var(--brand-ink);
+}
+
+.brand-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 70px;
+}
+
+@media (min-width: 768px) {
+  .brand-header-row {
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .brand-header--centered-crest .brand-header-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+  }
+}
+
+.brand-header--centered-crest .brand-nav {
+  justify-self: start;
+}
+
+.brand-header--centered-crest .brand-header-cta-zone {
+  justify-self: end;
+}
+
+.brand-wordmark {
+  font-size: clamp(1.1rem, 3.8vw, 1.55rem);
+  color: var(--brand-ink);
+  white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.brand-wordmark--footer {
+  color: var(--brand-footer-fg);
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+
+.brand-nav {
+  display: none;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .brand-nav {
+    display: flex;
+  }
+}
+
+.brand-nav a {
+  position: relative;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--brand-ink-muted);
+  white-space: nowrap;
+  padding-block: 0.3rem;
+  transition: color 0.16s ease;
+}
+
+.brand-nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.5px;
+  background: var(--brand-primary);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.18s var(--ease-settle);
+}
+
+.brand-nav a:hover,
+.brand-nav a[aria-current="page"] {
+  color: var(--brand-ink);
+}
+
+.brand-nav a:hover::after,
+.brand-nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+.brand-header-cta-zone {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.btn-brand-primary {
+  background: var(--brand-primary);
+  color: var(--brand-primary-fg);
+  border-color: var(--brand-primary);
+  border-radius: var(--radius-sm);
+}
+
+.btn-brand-primary:hover {
+  opacity: 0.91;
+}
+
+.btn-brand-outline {
+  background: transparent;
+  color: var(--brand-ink);
+  border-color: var(--brand-border);
+  border-radius: var(--radius-sm);
+}
+
+.btn-brand-outline:hover {
+  border-color: var(--brand-ink);
+}
+
+.btn-hero-primary {
+  background: var(--brand-primary);
+  color: var(--brand-primary-fg);
+  border-color: var(--brand-primary);
+  border-radius: var(--radius-sm);
+}
+
+.hero-dark-surface .btn-hero-primary {
+  background: var(--brand-hero-fg);
+  color: var(--brand-hero-bg);
+  border-color: var(--brand-hero-fg);
+}
+
+.btn-hero-secondary {
+  background: transparent;
+  color: var(--brand-hero-fg);
+  border-color: currentColor;
+  border-radius: var(--radius-sm);
+}
+
+.brand-mobile-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-sm);
+  color: var(--brand-ink);
+}
+
+@media (min-width: 768px) {
+  .brand-mobile-toggle {
+    display: none;
+  }
+}
+
+/* ─── HERO ARCHETYPES ─── */
+.brand-hero {
+  background: var(--brand-hero-bg);
+  color: var(--brand-hero-fg);
+  border-bottom: 1px solid var(--brand-border);
+  overflow: hidden;
+}
+
+.brand-hero-kicker {
+  font-size: 0.8125rem;
+  color: var(--brand-hero-muted);
+  margin-bottom: 0.85rem;
+}
+
+.brand-hero-h1 {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight, 600);
+  font-size: clamp(2.25rem, 4.2vw, 3.75rem);
+  line-height: 1.09;
+  margin-bottom: 1.2rem;
+  text-wrap: balance;
+}
+
+.brand-hero-lead {
+  font-size: 1.05rem;
+  line-height: 1.68;
+  color: var(--brand-hero-muted);
+  max-width: 60ch;
+  margin-bottom: 1.75rem;
+}
+
+.brand-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+/* Variant 1 & 8: Split Portrait / Craftsman Split */
+.hero-split-grid {
+  display: grid;
+  gap: 2.5rem;
+  align-items: stretch;
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+@media (min-width: 1024px) {
+  .hero-split-grid {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 3.5rem;
+  }
+  .hero-split-grid--reverse {
+    grid-template-columns: 0.95fr 1.05fr;
+  }
+}
+
+.hero-split-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-framed-media {
+  border-radius: var(--radius-lg, 6px);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  min-height: 320px;
+}
+
+/* Variant 2: Panoramic Monograph */
+.hero-panoramic {
+  padding-block: clamp(3rem, 6vw, 4.75rem);
+}
+
+.hero-panoramic-head {
+  max-width: 820px;
+  margin-bottom: 2.25rem;
+}
+
+.hero-panoramic-media {
+  aspect-ratio: 21 / 9;
+  min-height: 260px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brand-border);
+}
+
+/* Variant 3: Fullbleed Framed Scrim */
+.hero-fullbleed {
+  position: relative;
+  min-height: 540px;
+  display: flex;
+  align-items: center;
+  padding-block: 4rem;
+  color: #faf8f3;
+}
+
+.hero-fullbleed-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-fullbleed-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-fullbleed-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(10, 16, 24, 0.88) 0%, rgba(10, 16, 24, 0.68) 55%, rgba(10, 16, 24, 0.42) 100%);
+}
+
+.hero-fullbleed-frame {
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(250, 248, 243, 0.26);
+  padding: clamp(1.75rem, 4vw, 3.25rem);
+  max-width: 760px;
+  background: rgba(10, 16, 24, 0.38);
+  backdrop-filter: blur(4px);
+}
+
+.hero-fullbleed-frame .brand-hero-kicker,
+.hero-fullbleed-frame .brand-hero-lead {
+  color: #e2e8f0;
+}
+
+.hero-fullbleed-frame .brand-hero-h1 {
+  color: #faf8f3;
+}
+
+/* Additional Structural Helpers for Company Templates */
+.hero-stark-aside {
+  border-top: 1px solid var(--brand-border);
+  padding-top: 1.25rem;
+}
+
+.hero-stark-plate {
+  margin-top: 2.5rem;
+}
+
+.hero-broadsheet-split {
+  padding-block: 0.5rem 0;
+}
+
+.bento-lead-media {
+  aspect-ratio: 21 / 9;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.5rem;
+}
+
+.svc-card-cta-bottom {
+  margin-top: auto;
+  padding-top: 0.65rem;
+}
+
+.svc-index-row {
+  padding-block: 1.35rem;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+.svc-index-row-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.svc-index-num {
+  font-size: 0.95rem;
+  margin-right: 0.6rem;
+  color: var(--brand-ink-muted);
+}
+
+.svc-index-list-top {
+  border-top: 1px solid var(--brand-border);
+}
+
+.framed-4x3-plate {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brand-border);
+}
+
+.framed-16x9-plate {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brand-border);
+}
+
+.framed-21x9-plate {
+  aspect-ratio: 21 / 9;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brand-border);
+}
+
+.broadsheet-lead-card {
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  padding: 1.75rem;
+}
+
+.broadsheet-lead-media {
+  aspect-ratio: 16 / 9;
+  margin-bottom: 1.25rem;
+}
+
+.about-banner-pad {
+  padding-block: clamp(3rem, 5.5vw, 4.5rem);
+}
+
+.about-banner-h1 {
+  max-width: 24ch;
+}
+
+.about-sidebar-stack {
+  display: grid;
+  gap: 1.25rem;
+  align-content: start;
+}
+
+.hero-stark-kicker {
+  font-size: 0.82rem;
+  color: var(--brand-hero-muted);
+  margin-bottom: 0.45rem;
+}
+
+.hero-stark-list {
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.svc-inline-features {
+  font-size: 0.82rem;
+  color: var(--brand-ink);
+  margin-top: 0.55rem;
+  font-weight: 500;
+}
+
+.svc-pillar-card .svc-title {
+  font-size: 1.3rem;
+}
+
+.svc-pillar-card .svc-summary {
+  font-size: 0.9rem;
+}
+
+.svc-pillar-card .svc-feature-list {
+  margin-top: auto;
+}
+
+.svc-pillar-card .text-arrow-link {
+  padding-top: 0.5rem;
+}
+
+.svc-alt-row .svc-title {
+  margin-top: 0.35rem;
+  margin-bottom: 0.65rem;
+}
+
+.svc-alt-row .svc-summary {
+  margin-bottom: 0.9rem;
+}
+
+.svc-alt-row .svc-feature-list {
+  margin-bottom: 1.1rem;
+}
+
+.svc-broadsheet-item .svc-title {
+  margin-top: 0.25rem;
+  margin-bottom: 0.4rem;
+}
+
+.svc-broadsheet-item .svc-summary {
+  margin-bottom: 0.5rem;
+}
+
+.svc-broadsheet-checks {
+  font-size: 0.82rem;
+  color: var(--brand-ink);
+  margin-bottom: 0.5rem;
+}
+
+.broadsheet-lead-card .svc-title {
+  font-size: 1.75rem;
+  margin-block: 0.35rem 0.6rem;
+}
+
+.broadsheet-lead-card .svc-summary {
+  margin-bottom: 0.85rem;
+}
+
+.broadsheet-lead-checks {
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.svc-td-num {
+  font-weight: 600;
+}
+
+.svc-td-name {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+}
+
+.svc-td-scope {
+  color: var(--brand-ink-muted);
+  max-width: 42ch;
+}
+
+.svc-td-checks {
+  font-size: 0.85rem;
+}
+
+.about-note-heading {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  margin-bottom: 0.65rem;
+}
+
+.about-note-body {
+  font-size: 0.9rem;
+  color: var(--brand-ink-muted);
+  line-height: 1.65;
+}
+
+.about-note-phone {
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.about-note-email {
+  font-size: 0.88rem;
+  color: var(--brand-ink-muted);
+  margin-bottom: 0.35rem;
+}
+
+.footer-desc-measure {
+  max-width: 46ch;
+}
+
+.footer-heading-sm {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-phone-strong {
+  color: var(--brand-footer-fg);
+  font-weight: 600;
+}
+
+.underline-link {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Variant 4: Pillar Blueprint */
+.hero-blueprint {
+  display: grid;
+  gap: 2rem;
+  padding-block: clamp(3rem, 6vw, 4.75rem);
+}
+
+@media (min-width: 1024px) {
+  .hero-blueprint {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 3rem;
+  }
+}
+
+.hero-blueprint-specs {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  font-size: 0.84rem;
+}
+
+.hero-blueprint-specs strong {
+  display: block;
+}
+
+.hero-blueprint-specs span {
+  color: var(--brand-hero-muted);
+}
+
+/* Variant 6: Midnight Marquee */
+.hero-marquee {
+  padding-block: clamp(3rem, 6vw, 4.75rem);
+}
+
+.hero-marquee-top {
+  display: grid;
+  gap: 1.75rem;
+  margin-bottom: 2.25rem;
+}
+
+@media (min-width: 1024px) {
+  .hero-marquee-top {
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: end;
+  }
+}
+
+.hero-marquee-plate {
+  aspect-ratio: 16 / 7;
+  min-height: 260px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+/* Variant 7: Stark Gallery */
+.hero-stark {
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+.hero-stark-grid {
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .hero-stark-grid {
+    grid-template-columns: 1.25fr 0.75fr;
+    align-items: end;
+  }
+}
+
+/* Variant 9: Broadsheet Lead */
+.hero-broadsheet {
+  padding-block: clamp(2.5rem, 5vw, 4.25rem);
+}
+
+.broadsheet-dateline {
+  padding-block: 0.6rem;
+  border-block: 1px solid var(--brand-border);
+  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--brand-ink-muted);
+}
+
+/* Operational Strip Below Hero */
+.operational-strip {
+  background: var(--brand-surface);
+  border-bottom: 1px solid var(--brand-border);
+  padding-block: 1.1rem;
+}
+
+.operational-strip-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.75rem;
+  font-size: 0.85rem;
+  color: var(--brand-ink-muted);
+}
+
+.operational-strip-inner strong {
+  color: var(--brand-ink);
+}
+
+/* ─── SERVICES SECTION ARCHETYPES ─── */
+.brand-section-head {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.brand-section-title {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight, 600);
+  font-size: clamp(1.85rem, 3vw, 2.65rem);
+  line-height: 1.15;
+  color: var(--brand-ink);
+  text-wrap: balance;
+}
+
+.brand-section-sub {
+  color: var(--brand-ink-muted);
+  max-width: 60ch;
+  line-height: 1.65;
+  margin-top: 0.65rem;
+}
+
+/* 1. Editorial Ledger 2x2 */
+.svc-ledger-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--brand-border);
+  border: 1px solid var(--brand-border);
+}
+
+@media (min-width: 768px) {
+  .svc-ledger-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.svc-ledger-cell {
+  background: var(--brand-surface);
+  padding: clamp(1.65rem, 3vw, 2.35rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.svc-index {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--brand-accent);
+  font-weight: 600;
+}
+
+.svc-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--brand-ink);
+}
+
+.svc-summary {
+  color: var(--brand-ink-muted);
+  line-height: 1.65;
+  font-size: 0.95rem;
+}
+
+.svc-feature-list {
+  padding-left: 1.1rem;
+  color: var(--brand-ink);
+  font-size: 0.88rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
+/* 2. Hairline Rows */
+.svc-hairline-list {
+  border-top: 1px solid var(--brand-border);
+}
+
+.svc-hairline-row {
+  padding-block: 1.85rem;
+  border-bottom: 1px solid var(--brand-border);
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 900px) {
+  .svc-hairline-row {
+    grid-template-columns: 70px 1fr 1.3fr auto;
+    align-items: start;
+    gap: 2rem;
+  }
+}
+
+/* 3. Asymmetric Bento */
+.svc-bento-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 900px) {
+  .svc-bento-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .svc-bento-card--lead {
+    grid-column: span 2;
+  }
+}
+
+.svc-bento-card {
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* 4. Four Pillar Columns */
+.svc-pillars-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .svc-pillars-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .svc-pillars-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.svc-pillar-card {
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-top: 3px solid var(--brand-primary);
+  padding: 1.65rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* 5. Alternating Editorial */
+.svc-alternating-stack {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.svc-alt-row {
+  display: grid;
+  gap: 1.75rem;
+  align-items: center;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+@media (min-width: 900px) {
+  .svc-alt-row {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 3rem;
+  }
+  .svc-alt-row:nth-child(even) .svc-alt-media {
+    order: 2;
+  }
+}
+
+.svc-alt-media {
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brand-border);
+}
+
+/* 6 & 8: Dossier / Bookplate Cards */
+.svc-bookplate-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .svc-bookplate-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.svc-bookplate-card {
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  outline: 1px solid var(--brand-border);
+  outline-offset: -6px;
+  padding: 2rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* 7. Numbered Index + Visual */
+.svc-index-split {
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .svc-index-split {
+    grid-template-columns: 1.2fr 0.8fr;
+    align-items: start;
+  }
+}
+
+/* 9. Broadsheet Salience */
+.svc-broadsheet-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .svc-broadsheet-grid {
+    grid-template-columns: 1.15fr 0.85fr;
+  }
+}
+
+.svc-broadsheet-side {
+  display: grid;
+  gap: 1.35rem;
+}
+
+.svc-broadsheet-item {
+  padding-bottom: 1.35rem;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+/* 10. Tabular Specification Directory */
+.svc-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--brand-border);
+  background: var(--brand-surface);
+}
+
+.svc-spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.svc-spec-table th,
+.svc-spec-table td {
+  padding: 1.15rem 1.25rem;
+  border-bottom: 1px solid var(--brand-border);
+  vertical-align: top;
+}
+
+.svc-spec-table th {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--brand-ink-muted);
+  background: var(--brand-surface-alt);
+}
+
+/* ─── ABOUT US PAGE ARCHETYPES ─── */
+.about-monograph-grid {
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .about-monograph-grid {
+    grid-template-columns: 1.4fr 0.6fr;
+    gap: 3.5rem;
+  }
+}
+
+.about-margin-note {
+  padding: 1.5rem;
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-md);
+}
+
+.dropcap-paragraph::first-letter {
+  font-family: var(--font-display);
+  font-size: 3.3rem;
+  font-weight: 700;
+  float: left;
+  line-height: 0.88;
+  margin-right: 0.65rem;
+  margin-top: 0.2rem;
+  color: var(--brand-primary);
+}
+
+.editorial-pullquote {
+  margin-block: 2.25rem;
+  padding-block: 1.75rem;
+  border-block: 1px solid var(--brand-border);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  line-height: 1.45;
+  color: var(--brand-ink);
+}
+
+.spec-dl {
+  border-top: 1px solid var(--brand-border);
+}
+
+.spec-dl-row {
+  display: grid;
+  gap: 0.5rem;
+  padding-block: 1.35rem;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+@media (min-width: 768px) {
+  .spec-dl-row {
+    grid-template-columns: 240px 1fr;
+    gap: 2rem;
+  }
+}
+
+.spec-dl-row dt {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+}
+
+.spec-dl-row dd {
+  color: var(--brand-ink-muted);
+  line-height: 1.68;
+}
+
+.journal-columns {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 900px) {
+  .journal-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3rem;
+  }
+}
+
+/* ─── BRAND FOOTERS (Strictly Home | About Us + Verified Contact) ─── */
+.brand-footer {
+  background: var(--brand-footer-bg);
+  color: var(--brand-footer-fg);
+  padding-block: 3.25rem 2.25rem;
+  border-top: 1px solid var(--brand-border);
+}
+
+.brand-footer-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .brand-footer-grid {
+    grid-template-columns: 1.3fr 0.8fr 1fr;
+  }
+}
+
+.brand-footer-muted {
+  color: var(--brand-footer-muted);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.brand-footer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  font-size: 0.9rem;
+}
+
+.brand-footer-nav a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.brand-footer-bottom {
+  margin-top: 2.25rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--brand-footer-muted);
+}

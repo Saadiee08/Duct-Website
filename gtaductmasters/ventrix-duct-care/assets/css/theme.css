@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — Ventrix DUCT CARE (Minimalist Traditional Elegance) */
+:root {
+  --brand-canvas: #F4F1EA;
+  --brand-surface: #FAF8F4;
+  --brand-surface-alt: #E6E0D3;
+  --brand-ink: #232B22;
+  --brand-ink-muted: #515A4F;
+  --brand-primary: #2F3E2E;
+  --brand-primary-fg: #F4F1EA;
+  --brand-accent: #5C4033;
+  --brand-border: #D3CCB9;
+  --brand-hero-bg: #2F3E2E;
+  --brand-hero-fg: #F4F1EA;
+  --brand-hero-muted: #D2D8D0;
+  --brand-footer-bg: #1E281D;
+  --brand-footer-fg: #F4F1EA;
+  --brand-footer-muted: #A8B2A6;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --display-weight: 600;
+  --radius-sm: 0px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: none; letter-spacing: 0.01em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.04) saturate(0.88);
+}

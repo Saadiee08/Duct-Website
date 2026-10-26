@@ -1,0 +1,6 @@
+{
+  "name": "GTA Duct Masters & Partner Network",
+  "description": "Multi-company classical web ecosystem featuring the complete 7-page GTA Duct Masters parent website and 15 distinct two-page linked HVAC & air duct care company websites under a unified secure domain.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

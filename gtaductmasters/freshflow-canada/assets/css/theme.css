@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — FreshFlow Canada (Premium Industrial Heritage) */
+:root {
+  --brand-canvas: #F6F2EA;
+  --brand-surface: #FFFFFF;
+  --brand-surface-alt: #EAE3D5;
+  --brand-ink: #23272A;
+  --brand-ink-muted: #4F565D;
+  --brand-primary: #23272A;
+  --brand-primary-fg: #F6F2EA;
+  --brand-accent: #9E5422;
+  --brand-border: #D8CFC0;
+  --brand-hero-bg: #1D2023;
+  --brand-hero-fg: #F6F2EA;
+  --brand-hero-muted: #CBD0D6;
+  --brand-footer-bg: #171A1C;
+  --brand-footer-fg: #F6F2EA;
+  --brand-footer-muted: #9EA5AD;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Public Sans', system-ui, sans-serif;
+  --display-weight: 600;
+  --radius-sm: 0px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: uppercase; letter-spacing: 0.12em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.06) sepia(0.06);
+}

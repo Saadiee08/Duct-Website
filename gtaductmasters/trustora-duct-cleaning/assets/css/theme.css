@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — Trustora Duct Cleaning (Sophisticated Contemporary Classic) */
+:root {
+  --brand-canvas: #FFFFFF;
+  --brand-surface: #F6F3EC;
+  --brand-surface-alt: #EAE3D5;
+  --brand-ink: #22252A;
+  --brand-ink-muted: #535861;
+  --brand-primary: #22252A;
+  --brand-primary-fg: #FFFFFF;
+  --brand-accent: #7C5832;
+  --brand-border: #DFD8C8;
+  --brand-hero-bg: #EAE3D5;
+  --brand-hero-fg: #22252A;
+  --brand-hero-muted: #494E56;
+  --brand-footer-bg: #191C20;
+  --brand-footer-fg: #F6F3EC;
+  --brand-footer-muted: #A1A6B0;
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: 'Lora', Georgia, serif;
+  --display-weight: 600;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: none; letter-spacing: -0.01em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.02) saturate(0.96);
+}

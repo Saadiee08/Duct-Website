@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — eliteductcanada (Modern Executive Classic) */
+:root {
+  --brand-canvas: #F8FAFC;
+  --brand-surface: #FFFFFF;
+  --brand-surface-alt: #EDF2F7;
+  --brand-ink: #0F2147;
+  --brand-ink-muted: #475569;
+  --brand-primary: #163269;
+  --brand-primary-fg: #FFFFFF;
+  --brand-accent: #3B5998;
+  --brand-border: #CBD5E1;
+  --brand-hero-bg: #163269;
+  --brand-hero-fg: #F8FAFC;
+  --brand-hero-muted: #CBD5E1;
+  --brand-footer-bg: #0C1D40;
+  --brand-footer-fg: #F8FAFC;
+  --brand-footer-muted: #94A3B8;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+  --display-weight: 600;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: none; letter-spacing: 0.01em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.03) saturate(0.95);
+}

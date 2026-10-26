@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — Ductoryn Air Solutions (Timeless Luxury Aesthetic) */
+:root {
+  --brand-canvas: #FAF7F0;
+  --brand-surface: #FFFFFF;
+  --brand-surface-alt: #EFE9DC;
+  --brand-ink: #0D2B22;
+  --brand-ink-muted: #475B54;
+  --brand-primary: #0D3B2E;
+  --brand-primary-fg: #FAF7F0;
+  --brand-accent: #9E7B2F;
+  --brand-border: #DCD4C2;
+  --brand-hero-bg: #0D3B2E;
+  --brand-hero-fg: #FAF7F0;
+  --brand-hero-muted: #CDE0DA;
+  --brand-footer-bg: #08261D;
+  --brand-footer-fg: #FAF7F0;
+  --brand-footer-muted: #99B5AC;
+  --font-display: 'Bodoni Moda', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --display-weight: 600;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: none; letter-spacing: -0.01em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.04) saturate(0.94);
+}

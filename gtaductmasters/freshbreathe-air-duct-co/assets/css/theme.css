@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — FreshBreathe Air Duct Co. (Executive Business Luxury) */
+:root {
+  --brand-canvas: #F7F8FA;
+  --brand-surface: #FFFFFF;
+  --brand-surface-alt: #ECEFF4;
+  --brand-ink: #0A1628;
+  --brand-ink-muted: #4B5563;
+  --brand-primary: #0A1628;
+  --brand-primary-fg: #F7F8FA;
+  --brand-accent: #9C7834;
+  --brand-border: #D5DCE6;
+  --brand-hero-bg: #0A1628;
+  --brand-hero-fg: #F7F8FA;
+  --brand-hero-muted: #CBD5E1;
+  --brand-footer-bg: #07101E;
+  --brand-footer-fg: #F7F8FA;
+  --brand-footer-muted: #94A3B8;
+  --font-display: 'Bodoni Moda', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --display-weight: 600;
+  --radius-sm: 0px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: none; letter-spacing: 0.01em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.05) saturate(0.94);
+}

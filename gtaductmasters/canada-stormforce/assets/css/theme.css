@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — Canada StormForce (Architectural Elegance) */
+:root {
+  --brand-canvas: #F8FAFC;
+  --brand-surface: #FFFFFF;
+  --brand-surface-alt: #E9EFF5;
+  --brand-ink: #152842;
+  --brand-ink-muted: #475569;
+  --brand-primary: #1E3A5F;
+  --brand-primary-fg: #FFFFFF;
+  --brand-accent: #3B5B85;
+  --brand-border: #CBD5E1;
+  --brand-hero-bg: #152842;
+  --brand-hero-fg: #F8FAFC;
+  --brand-hero-muted: #CBD5E1;
+  --brand-footer-bg: #0F1E33;
+  --brand-footer-fg: #F8FAFC;
+  --brand-footer-muted: #94A3B8;
+  --font-display: 'Barlow Condensed', system-ui, sans-serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+  --display-weight: 600;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: uppercase; letter-spacing: 0.12em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.04) saturate(0.92);
+}

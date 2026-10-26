@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — Pride Duct Cleaning (Premium Editorial Classic) */
+:root {
+  --brand-canvas: #FBF8F3;
+  --brand-surface: #FFFFFF;
+  --brand-surface-alt: #F2ECE2;
+  --brand-ink: #221F20;
+  --brand-ink-muted: #575052;
+  --brand-primary: #581C28;
+  --brand-primary-fg: #FBF8F3;
+  --brand-accent: #581C28;
+  --brand-border: #DED5C8;
+  --brand-hero-bg: #FBF8F3;
+  --brand-hero-fg: #221F20;
+  --brand-hero-muted: #4E4749;
+  --brand-footer-bg: #241418;
+  --brand-footer-fg: #FBF8F3;
+  --brand-footer-muted: #BCAEB1;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Source Serif 4', Georgia, serif;
+  --display-weight: 600;
+  --radius-sm: 0px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: none; letter-spacing: -0.01em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.03) saturate(0.95);
+}

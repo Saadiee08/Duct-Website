@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — Fresh Air Pros (Timeless Corporate Luxury) */
+:root {
+  --brand-canvas: #FAF8F3;
+  --brand-surface: #FFFFFF;
+  --brand-surface-alt: #F1ECE1;
+  --brand-ink: #0F223D;
+  --brand-ink-muted: #475569;
+  --brand-primary: #0F223D;
+  --brand-primary-fg: #FAF8F3;
+  --brand-accent: #9A7432;
+  --brand-border: #DFD7C8;
+  --brand-hero-bg: #0F223D;
+  --brand-hero-fg: #FAF8F3;
+  --brand-hero-muted: #CBD5E1;
+  --brand-footer-bg: #0A182B;
+  --brand-footer-fg: #FAF8F3;
+  --brand-footer-muted: #94A3B8;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --display-weight: 600;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: none; letter-spacing: -0.01em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.03) saturate(0.96);
+}

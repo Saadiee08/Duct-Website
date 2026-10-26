@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — ClearFlow Duct Care (Refined Natural Classic) */
+:root {
+  --brand-canvas: #F5F2EB;
+  --brand-surface: #FCFBF8;
+  --brand-surface-alt: #EAE4D7;
+  --brand-ink: #163828;
+  --brand-ink-muted: #4A5950;
+  --brand-primary: #163828;
+  --brand-primary-fg: #FAF8F4;
+  --brand-accent: #825832;
+  --brand-border: #D6CFC0;
+  --brand-hero-bg: #F5F2EB;
+  --brand-hero-fg: #163828;
+  --brand-hero-muted: #3E5146;
+  --brand-footer-bg: #112B1F;
+  --brand-footer-fg: #F5F2EB;
+  --brand-footer-muted: #A5B8AE;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --display-weight: 600;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 140px 140px 10px 10px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: none; letter-spacing: -0.01em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.02) saturate(0.95);
+}

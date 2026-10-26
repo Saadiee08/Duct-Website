@@ -1,0 +1,40 @@
+/* Independent Classical Theme Stylesheet — Alpine Home Care (Warm Heritage Design) */
+:root {
+  --brand-canvas: #FAF6F0;
+  --brand-surface: #FFFFFF;
+  --brand-surface-alt: #F0E8DC;
+  --brand-ink: #2B1E19;
+  --brand-ink-muted: #5C4B43;
+  --brand-primary: #2B1E19;
+  --brand-primary-fg: #FAF6F0;
+  --brand-accent: #8F6526;
+  --brand-border: #DFD3C3;
+  --brand-hero-bg: #FAF6F0;
+  --brand-hero-fg: #2B1E19;
+  --brand-hero-muted: #524139;
+  --brand-footer-bg: #221713;
+  --brand-footer-fg: #FAF6F0;
+  --brand-footer-muted: #B8A99E;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Lora', Georgia, serif;
+  --display-weight: 600;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+body.brand-body {
+  background-color: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--font-body);
+}
+
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: none; letter-spacing: -0.01em;
+}
+
+.brand-media-frame img {
+  filter: contrast(1.03) sepia(0.08);
+}
