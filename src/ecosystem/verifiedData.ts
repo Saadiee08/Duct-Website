@@ -55,6 +55,7 @@ export interface GalleryPair {
   readonly beforeAlt: string;
   readonly afterSrc: string;
   readonly afterAlt: string;
+  readonly afterFallbackSrc?: string;
 }
 
 export interface CustomerReview {
@@ -249,8 +250,9 @@ export const PARENT_GALLERY_PAIRS: readonly GalleryPair[] = [
     category: 'Residential',
     beforeSrc: '/assets/images/gta/img3.jpeg',
     beforeAlt: 'Before: dirty, dusty air duct interior prior to extraction',
-    afterSrc: '/assets/images/gta/img4.jpeg',
+    afterSrc: '/assets/images/gta/residential-after.jpg',
     afterAlt: 'After: clean, sanitized air duct interior following service',
+    afterFallbackSrc: '/assets/images/gta/img4.jpeg',
   },
   {
     id: 'commercial-hvac',

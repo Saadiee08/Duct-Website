@@ -4,6 +4,7 @@ import {
   renderLinkedCompanyAboutPage,
   renderLinkedCompanyHomePage,
 } from './companyTemplates.ts';
+import { GUARANTEED_GTA_ASSETS_BASE64 } from './guaranteedAssets.ts';
 import { renderNotFoundPage, renderParentPage } from './parentTemplates.ts';
 import {
   renderRobotsTxt,
@@ -34,7 +35,12 @@ export interface BuildSummary {
 }
 
 const REQUIRED_GTA_IMAGES = [
+  'gta-emblem.jpg',
+  'site-icon.png',
+  'logo.jpg',
   'Logo.jpg',
+  'residential-after.jpg',
+  'lightbox-placeholder.gif',
   'img1.jpeg',
   'img2.jpeg',
   'img3.jpeg',
@@ -124,11 +130,12 @@ function verifyRequiredOutputAssets(outputRoot: string): void {
 }
 
 function copyAssetsIntoOutput(workspaceRoot: string, outputRoot: string): void {
-  // 1. Copy verified GTA Duct Masters live site images (checking public/assets first, then gtaductmasters/ fallback)
+  // 1. Copy verified GTA Duct Masters live site images (checking public/assets first, gtaductmasters/ fallback, and embedded base64 recovery)
   const gtaDestDir = path.join(outputRoot, 'assets', 'images', 'gta');
   fs.mkdirSync(gtaDestDir, { recursive: true });
   for (const fileName of REQUIRED_GTA_IMAGES) {
-    copyFromFirstExistingSource(
+    const destFile = path.join(gtaDestDir, fileName);
+    const copied = copyFromFirstExistingSource(
       [
         path.join(workspaceRoot, 'public', 'assets', 'images', 'gta', fileName),
         path.join(
@@ -140,8 +147,22 @@ function copyAssetsIntoOutput(workspaceRoot: string, outputRoot: string): void {
           fileName
         ),
       ],
-      path.join(gtaDestDir, fileName)
+      destFile
     );
+
+    if (!copied) {
+      const fallbackKey =
+        fileName === 'logo.jpg' || fileName === 'Logo.jpg'
+          ? 'gta-emblem.jpg'
+          : fileName === 'img4.jpeg'
+            ? 'residential-after.jpg'
+            : fileName;
+      const b64 = GUARANTEED_GTA_ASSETS_BASE64[fallbackKey];
+      if (b64) {
+        fs.mkdirSync(path.dirname(destFile), { recursive: true });
+        fs.writeFileSync(destFile, Buffer.from(b64, 'base64'));
+      }
+    }
   }
 
   // 2. Copy high-resolution editorial images to deterministic paths

@@ -113,7 +113,7 @@ export function renderSeoHead(input: SeoHeadInput): string {
 
   <!-- Modular Stylesheets -->
 ${stylesheetTags}
-  <link rel="icon" href="${escapeHtml(resolvedIconHref)}" />
+  <link rel="icon"${resolvedIconHref.endsWith('.png') ? ' type="image/png"' : ''} href="${escapeHtml(resolvedIconHref)}" />
 
   <!-- Schema.org Structured Data (Verified Business Details Only) -->
   <script type="application/ld+json">
@@ -164,7 +164,7 @@ export function renderStaticHostHeaders(): string {
 ${lines.join('\n')}
 
 /assets/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 `;
 }
 

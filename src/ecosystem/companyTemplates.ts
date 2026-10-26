@@ -750,7 +750,7 @@ export function renderLinkedCompanyHomePage(theme: CompanyTheme): string {
       '/assets/css/layouts.css',
       themeCssHref,
     ],
-    iconHref: '/assets/images/gta/Logo.jpg',
+    iconHref: '/assets/images/gta/site-icon.png',
     includeParentAggregateRating: false,
   });
 
@@ -805,7 +805,7 @@ export function renderLinkedCompanyAboutPage(theme: CompanyTheme): string {
       '/assets/css/layouts.css',
       themeCssHref,
     ],
-    iconHref: '/assets/images/gta/Logo.jpg',
+    iconHref: '/assets/images/gta/site-icon.png',
     includeParentAggregateRating: false,
   });
 

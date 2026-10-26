@@ -2653,6 +2653,23 @@ export const NAVIGATION_JS = `/* Modular Responsive Navigation & Progressive Pag
     el.textContent = String(new Date().getFullYear());
   });
 
+  // Resilient secondary path fallback for critical images (CSP-compliant, no inline handlers)
+  document.querySelectorAll('img[data-fallback-src]').forEach(function (img) {
+    function tryFallback() {
+      var fallback = img.getAttribute('data-fallback-src');
+      if (!fallback || img.getAttribute('data-fallback-applied') === 'true') {
+        return;
+      }
+      img.setAttribute('data-fallback-applied', 'true');
+      img.setAttribute('src', fallback);
+    }
+
+    img.addEventListener('error', tryFallback);
+    if (img.complete && img.naturalWidth === 0) {
+      tryFallback();
+    }
+  });
+
   // Restore visibility immediately on bfcache back/forward navigation
   window.addEventListener('pageshow', function () {
     document.body.classList.remove('is-leaving');

@@ -409,7 +409,94 @@ test('physical HTML builder writes 37 unique HTML documents, 15 theme CSS files,
     const locCount = [...sitemap.matchAll(/<loc>/g)].length;
     assert.equal(locCount, 37);
     assert.ok(fs.existsSync(path.join(tempOut, '.nojekyll')));
+
+    // Verify GTA Duct Masters brand emblem, dedicated favicon, Residential After image, and decoupled lightbox
+    for (const slug of ['', 'services', 'about', 'why-us', 'gallery', 'reviews', 'contact']) {
+      const pFile =
+        slug === ''
+          ? path.join(tempOut, 'index.html')
+          : path.join(tempOut, slug, 'index.html');
+      const pHtml = fs.readFileSync(pFile, 'utf8');
+      assert.ok(
+        !pHtml.includes('Logo.jpg'),
+        `Uppercase Logo.jpg must not be referenced in ${pFile}`
+      );
+      assert.ok(
+        pHtml.includes('site-icon.png'),
+        `Dedicated site-icon.png favicon must be referenced in ${pFile}`
+      );
+      const emblemMatches = [...pHtml.matchAll(/gta-emblem\.jpg/g)];
+      assert.equal(
+        emblemMatches.length,
+        2,
+        `Header and footer must both load gta-emblem.jpg in ${pFile}`
+      );
+    }
+
+    for (const gSlug of ['', 'gallery']) {
+      const gFile =
+        gSlug === ''
+          ? path.join(tempOut, 'index.html')
+          : path.join(tempOut, gSlug, 'index.html');
+      const gHtml = fs.readFileSync(gFile, 'utf8');
+      assert.ok(
+        gHtml.includes('residential-after.jpg'),
+        `Residential Inspection After photo must reference residential-after.jpg in ${gFile}`
+      );
+      assert.ok(
+        gHtml.includes('id="gallery-lightbox-img"') &&
+          gHtml.includes('lightbox-placeholder.gif'),
+        `Hidden dialog #gallery-lightbox-img must use decoupled lightbox-placeholder.gif in ${gFile}`
+      );
+    }
   } finally {
     fs.rmSync(tempOut, { recursive: true, force: true });
   }
 });
+
+test('buildEcosystemToDirectory self-heals critical GTA emblem, favicon, and Residential After assets if missing from public/', () => {
+  const bareWorkspace = fs.mkdtempSync(path.join(os.tmpdir(), 'gta-bare-ws-'));
+  const tempOut = fs.mkdtempSync(path.join(os.tmpdir(), 'gta-bare-out-'));
+  try {
+    // Populate only non-embedded GTA & editorial/vendor files into bareWorkspace
+    const srcGta = path.join(workspaceRoot, 'public', 'assets', 'images', 'gta');
+    const dstGta = path.join(bareWorkspace, 'public', 'assets', 'images', 'gta');
+    fs.mkdirSync(dstGta, { recursive: true });
+    for (const f of ['img1.jpeg', 'img2.jpeg', 'img3.jpeg', 'img5.jpeg', 'img6.jpeg', 'img7.jpeg', 'img8.jpeg']) {
+      fs.copyFileSync(path.join(srcGta, f), path.join(dstGta, f));
+    }
+
+    const srcEd = path.join(workspaceRoot, 'public', 'assets', 'images', 'editorial');
+    const dstEd = path.join(bareWorkspace, 'public', 'assets', 'images', 'editorial');
+    fs.mkdirSync(dstEd, { recursive: true });
+    for (const f of fs.readdirSync(srcEd)) {
+      fs.copyFileSync(path.join(srcEd, f), path.join(dstEd, f));
+    }
+
+    const srcVendor = path.join(workspaceRoot, 'public', 'assets', 'js', 'vendor');
+    const dstVendor = path.join(bareWorkspace, 'public', 'assets', 'js', 'vendor');
+    fs.mkdirSync(dstVendor, { recursive: true });
+    for (const f of fs.readdirSync(srcVendor)) {
+      fs.copyFileSync(path.join(srcVendor, f), path.join(dstVendor, f));
+    }
+
+    buildEcosystemToDirectory(bareWorkspace, tempOut);
+
+    for (const recovered of [
+      'gta-emblem.jpg',
+      'site-icon.png',
+      'logo.jpg',
+      'Logo.jpg',
+      'residential-after.jpg',
+      'img4.jpeg',
+      'lightbox-placeholder.gif',
+    ]) {
+      const p = path.join(tempOut, 'assets', 'images', 'gta', recovered);
+      assert.ok(fs.existsSync(p) && fs.statSync(p).size > 0, `Expected self-healed ${recovered}`);
+    }
+  } finally {
+    fs.rmSync(bareWorkspace, { recursive: true, force: true });
+    fs.rmSync(tempOut, { recursive: true, force: true });
+  }
+});
+

@@ -132,7 +132,7 @@ function renderParentHeader(
   return `<header class="parent-header">
     <div class="container parent-header-inner">
       <a href="${escapeHtml(rel('/'))}" class="parent-brand-link" data-page-transition>
-        <img src="${escapeHtml(rel('/assets/images/gta/Logo.jpg'))}" alt="GTA Duct Masters Logo" width="42" height="42" class="parent-brand-logo" />
+        <img src="${escapeHtml(rel('/assets/images/gta/gta-emblem.jpg'))}" data-fallback-src="${escapeHtml(rel('/assets/images/gta/logo.jpg'))}" alt="GTA Duct Masters Logo" width="42" height="42" decoding="async" class="parent-brand-logo" />
         <span class="parent-brand-name">GTA Duct Masters</span>
       </a>
 
@@ -187,7 +187,7 @@ function renderParentFooter(
       <div class="parent-footer-grid">
         <div>
           <a href="${escapeHtml(rel('/'))}" class="parent-brand-link mb-md">
-            <img src="${escapeHtml(rel('/assets/images/gta/Logo.jpg'))}" alt="GTA Duct Masters Logo" width="42" height="42" class="parent-brand-logo" />
+            <img src="${escapeHtml(rel('/assets/images/gta/gta-emblem.jpg'))}" data-fallback-src="${escapeHtml(rel('/assets/images/gta/logo.jpg'))}" alt="GTA Duct Masters Logo" width="42" height="42" decoding="async" class="parent-brand-logo" />
             <span class="parent-brand-name parent-brand-name--light">GTA Duct Masters</span>
           </a>
           <p class="parent-footer-tagline">Cleaner Air. Healthier Living. Certified Experts.</p>
@@ -415,7 +415,7 @@ function renderGallerySection(
               <span class="ba-caption-tag">Before</span>
             </button>
             <button type="button" class="ba-frame" data-lightbox-src="${escapeHtml(rel(pair.afterSrc))}" data-lightbox-alt="${escapeHtml(pair.afterAlt)}" aria-label="Enlarge after photo: ${escapeHtml(pair.caption)}">
-              <img src="${escapeHtml(rel(pair.afterSrc))}" alt="${escapeHtml(pair.afterAlt)}" width="600" height="450" loading="lazy" />
+              <img src="${escapeHtml(rel(pair.afterSrc))}"${pair.afterFallbackSrc ? ` data-fallback-src="${escapeHtml(rel(pair.afterFallbackSrc))}"` : ''} alt="${escapeHtml(pair.afterAlt)}" width="600" height="450" loading="lazy" decoding="async" />
               <span class="ba-caption-tag">After</span>
             </button>
           </div>
@@ -453,7 +453,7 @@ ${pairs}
         <p id="gallery-lightbox-caption" class="gallery-dialog-caption"></p>
         <button type="button" id="gallery-lightbox-close" class="btn-action btn-parent-light dialog-close-compact">Close</button>
       </div>
-      <img id="gallery-lightbox-img" src="${escapeHtml(rel('/assets/images/gta/img4.jpeg'))}" alt="Inspection detail" width="900" height="675" />
+      <img id="gallery-lightbox-img" src="${escapeHtml(rel('/assets/images/gta/lightbox-placeholder.gif'))}" alt="Inspection detail" width="900" height="675" loading="lazy" decoding="async" />
     </dialog>
   </section>`;
 }
@@ -597,7 +597,7 @@ function wrapParentDocument(meta: ParentPageMeta, mainContent: string): string {
     ogImagePath: '/assets/images/gta/img1.jpeg',
     googleFontsUrl: PARENT_GOOGLE_FONTS,
     stylesheets: PARENT_STYLESHEETS,
-    iconHref: '/assets/images/gta/Logo.jpg',
+    iconHref: '/assets/images/gta/site-icon.png',
     includeParentAggregateRating: true,
   });
 
@@ -780,7 +780,7 @@ export function renderNotFoundPage(): string {
     ogImagePath: '/assets/images/gta/img1.jpeg',
     googleFontsUrl: PARENT_GOOGLE_FONTS,
     stylesheets: PARENT_STYLESHEETS,
-    iconHref: '/assets/images/gta/Logo.jpg',
+    iconHref: '/assets/images/gta/site-icon.png',
     includeParentAggregateRating: false,
     useRootRelativeAssets: true,
   });
